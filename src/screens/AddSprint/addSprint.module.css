@@ -1,0 +1,70 @@
+.AddSprint {
+  height: 100%;
+  display: flex;
+  gap: 30px;
+  /*overflow-x: scroll;*/
+  padding: 0 6px;
+  position: relative;
+}
+
+.StartAndDeadlineParent {
+  display: flex;
+  gap: 16px;
+}
+
+.WorkingTimeParent {
+  width: 20%;
+  border-bottom: 1px solid #EAEDF1;
+  padding-bottom: 7px;
+}
+
+.WorkingTimeTitle {
+  color: #495584;
+  font-size: 8px
+}
+
+.StartAndDeadlineDate {
+  color: #212529;
+  font-size: 12px;
+}
+
+.Line {
+  width: 100%;
+  height: 1px;
+  background: #D9D9D9;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.ProjectTitle {
+  width: 100%;
+  height: 33px;
+  padding: 7px;
+  border-radius: 2px;
+  border: 0.5px solid #495584;
+  color: #495584;
+  font-size: 12px;
+  resize: none;
+  outline: none;
+  margin-bottom: 20px;
+}
+
+.ProjectDescription {
+  width: 100%;
+  height: 230px;
+  padding: 7px;
+  border-radius: 2px;
+  border: 0.5px solid #495584;
+  color: #495584;
+  font-size: 12px;
+  resize: none;
+  outline: none;
+}
+
+.ButtonsParent {
+  display: flex;
+  height: 45px;
+  gap: 10px;
+  margin-top: 20px;
+  align-items: center;
+}

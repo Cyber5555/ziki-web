@@ -1,0 +1,37 @@
+.FileInputParent {
+  position: relative;
+  overflow: hidden;
+  color: #6259ca;
+  font-size: 12px;
+  padding: 0 27px;
+  border-radius: 3px;
+  border: 1px solid #6259ca;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  height: 40px;
+}
+
+.FileInput {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  /* font-size: 100px; */
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+
+.RemoveFile {
+  color: #6259ca;
+  position: relative;
+  z-index: 10;
+}

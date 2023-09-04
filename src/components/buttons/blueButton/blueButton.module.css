@@ -1,0 +1,14 @@
+
+.Link {
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+  outline: none;
+  /*border: none;*/
+  z-index: 10;
+  color: #FFF;
+  font-size: 12px;
+  padding: 10px 27px;
+  background: #6259CA;
+  border-radius: 3px;
+}

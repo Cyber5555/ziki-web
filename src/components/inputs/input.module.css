@@ -1,0 +1,21 @@
+.InputParent {
+  position: relative;
+  width: 80%;
+}
+
+.Input {
+  width: 100%;
+}
+.ShowPassword {
+  position: absolute;
+  right: 10px;
+  top: 28px;
+  transform: translateY(-50%);
+}
+
+.ErrorMessage {
+  color: red;
+  height: 20px;
+  margin-bottom: 20px;
+  text-align: left;
+}

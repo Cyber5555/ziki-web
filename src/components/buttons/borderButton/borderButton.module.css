@@ -1,0 +1,12 @@
+.Link {
+  color: #6259ca;
+  font-size: 12px;
+  padding: 0 27px;
+  border-radius: 3px;
+  border: 1px solid #6259ca;
+  background: #fff;
+  cursor: pointer;
+  height: 40px;
+  display: grid;
+  place-items: center;
+}

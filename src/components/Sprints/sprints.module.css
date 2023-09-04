@@ -1,0 +1,17 @@
+.Sprints {
+  width: 100%;
+  border: 0.5px solid #495584;
+  margin-bottom: 6px;
+  padding: 10px 8px;
+}
+
+.Title {
+  color: #495584;
+  font-size: 12px;
+}
+
+.SprintText {
+  color: #212529;
+  font-size: 12px;
+  margin-top: 8px;
+}

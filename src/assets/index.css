@@ -1,0 +1,25 @@
+@font-face {
+  font-family: "Regular";
+  src: url("fonts/Roboto-Regular.ttf");
+  font-weight: 400;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: "Regular", -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Open Sans', sans-serif;
+  /*color: #86a5b1;*/
+  /*background-color: #2f3241;*/
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
