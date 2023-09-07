@@ -12,13 +12,22 @@ export const addProjectRequest = createAsyncThunk(
 
     let form_data = new FormData();
     form_data.append("name", data.projectName);
-    form_data.append("description", data.description);
+    if (data.description?.length) {
+      form_data.append("description", data.description);
+    }
     form_data.append("start_date", data.startDate);
     form_data.append("end_date", data.endDate);
-    form_data.append("users", data.users);
-    form_data.append("project_logo", data.projectLogo);
-    form_data.append("project_tz", data.projectTz);
-    form_data.append("project_tz", data.projectTz);
+
+    for (let i = 0; i < data.users.length; i++) {
+      form_data.append("users[]", data.users[i]);
+    }
+
+    if (Object.keys(data.projectLogo).length) {
+      form_data.append("project_logo", data.projectLogo);
+    }
+    if (Object.keys(data.projectTz).length) {
+      form_data.append("project_tz", data.projectTz);
+    }
 
     try {
       let response = await Http.post(
@@ -26,7 +35,6 @@ export const addProjectRequest = createAsyncThunk(
         headers,
         form_data
       );
-
       return response;
     } catch (error) {
       return rejectWithValue(error.response);
@@ -48,12 +56,6 @@ const addProjectSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addProjectRequest.fulfilled, (state, action) => {
-        if (action.payload.success) {
-          // state.all_project_data = action.payload;
-        } else {
-          state.errorMessages = action.payload?.errors;
-          console.log(action.payload?.errors);
-        }
         state.isLoading = false;
       })
       .addCase(addProjectRequest.rejected, (state, action) => {

@@ -11,37 +11,58 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { addProjectRequest } from "../../store/authUsersReducer/addProjectSlice";
 import FileInput from "../../components/fileInput/fileInput";
+import { ClipLoader } from "react-spinners";
+
+import { getAllUsersRequest } from "../../store/authUsersReducer/getAllUsersSlice";
+import UserList from "../../components/UserList/UserList";
+import { useNavigate } from "react-router-dom";
 
 export const AddProject = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState(moment(new Date()));
   const [endDate, setEndDate] = useState(moment(new Date()));
-  const [users, setUsers] = useState([]);
-  const [projectLogo, setProjectLogo] = useState("asdasd.jpg");
+  const [projectLogo, setProjectLogo] = useState({});
   const [projectTz, setProjectTz] = useState({});
-  const { all_project_data, errorMessages } = useSelector(
+  const [openUserList, setOpenUserList] = useState(false);
+  const { isLoading, errorMessages } = useSelector(
     (state) => state.addProjectSlice
   );
+  const { all_users } = useSelector((state) => state.getAllUsersSlice);
+
+  const { selectedUsers } = useSelector((state) => state.addUserInProjectSlice);
 
   const handleSubmit = (e) => {
-    // e.stopPropagation();
     e.preventDefault();
     dispatch(
       addProjectRequest({
         projectName,
         description,
-        startDate,
-        endDate,
-        users,
+        startDate: moment(startDate).format("DD.MM.YYYY"),
+        endDate: moment(endDate).format("DD.MM.YYYY"),
+        users: selectedUsers,
         projectLogo,
         projectTz,
       })
-    );
+    ).then((res) => {
+      if (res.payload?.success) {
+        navigate("/", {
+          replace: true,
+        });
+      }
+    });
   };
 
-  console.log(errorMessages);
+  const openModal = () => {
+    setOpenUserList(true);
+    dispatch(getAllUsersRequest({}));
+  };
+
+  const closeModal = () => {
+    setOpenUserList(false);
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -111,7 +132,6 @@ export const AddProject = () => {
             </FileInput>
             <FileInput
               onChange={(e) => {
-                console.log(e.target.files[0].name);
                 setProjectTz(e.target.files[0]);
               }}
               onRemove={() => {
@@ -123,7 +143,9 @@ export const AddProject = () => {
             <BorderButton>+ Add project logoStatus project</BorderButton>
           </div>
 
-          <BlueButton style={{ position: "static", marginTop: 12 }}>
+          <BlueButton
+            style={{ position: "static", marginTop: 12 }}
+            onClick={openModal}>
             + Add user
           </BlueButton>
           <br />
@@ -137,10 +159,39 @@ export const AddProject = () => {
           <BlueButton
             style={{ position: "absolute", right: 20, bottom: 20 }}
             onClick={(e) => handleSubmit(e)}>
-            Save
+            {isLoading ? (
+              <ClipLoader loading={isLoading} size={15} color="white" />
+            ) : (
+              "Save"
+            )}
           </BlueButton>
+          <div className={styles.UsersParent}>
+            <h2 className={styles.UsersTitle}>Users</h2>
+            {/* <img src={EditIcon} alt="Edit Icon" style={{ cursor: "pointer" }} /> */}
+          </div>
+
+          {all_users?.map(
+            (user, index) =>
+              selectedUsers.includes(user.id) && (
+                <div className={styles.CreatedUsers} key={index}>
+                  <div className={styles.UserNameFirstLatterOrImage}>
+                    {user?.name && user?.name[0]}
+                  </div>
+                  <div>
+                    <p className={styles.UserNameAndDeveloperType}>
+                      {user.name}
+                    </p>
+                    <p className={styles.UserNameAndDeveloperType}>
+                      Front-end (50/15)
+                    </p>
+                  </div>
+                </div>
+              )
+          )}
         </BigRenderer>
       </div>
+
+      <UserList isOpen={openUserList} close={closeModal} />
     </LocalizationProvider>
   );
 };

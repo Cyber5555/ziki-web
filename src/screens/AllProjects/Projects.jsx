@@ -1,17 +1,33 @@
 import { RenderedItems } from "../../components/RenderedItems/RenderedItems";
 import styles from "./projects.module.css";
 import { BlueButton } from "../../components/buttons/blueButton/BlueButton";
-import { Sprints } from "../../components/Sprints/Sprints";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProjectsRequest } from "../../store/authUsersReducer/getAllProjectsSlice";
+import Pusher from "pusher-js";
+import { getProjectColumnRequest } from "../../store/authUsersReducer/getProjectColumnSlice";
 
 export const Projects = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isLoading, all_project_data } = useSelector(
     (state) => state.getAllProjectsSlice
   );
+
+  let pusher = new Pusher("ee8b67274fccf540b81e", {
+    appId: "1651282",
+    secret: "0cbc75cacff02b16b2c9",
+    cluster: "ap2",
+    // encrypted: true,
+  });
+
+  const channel = pusher.subscribe("project-list");
+
+  channel.bind("project.created", function (data) {
+    dispatch(getAllProjectsRequest({}));
+    return data;
+  });
 
   useEffect(() => {
     dispatch(getAllProjectsRequest({}));
@@ -40,13 +56,21 @@ export const Projects = () => {
             {/* {board?.statuses?.map((task, $$) => (
               <Sprints key={$$} title={task?.name} />
             ))} */}
-            <Link to={"/Project"} className={styles.ShowAllSprints}>
+            <p
+              className={styles.ShowAllSprints}
+              onClick={() => {
+                localStorage.setItem("idea", board.id);
+                // dispatch(getProjectColumnRequest({ id: board.id }));
+                navigate("/Project");
+              }}>
               View all sprints (85)
-            </Link>
+            </p>
             <div className={styles.CreatedUsersParent}>
               {board?.users?.map((user, $$$) => (
                 <div className={styles.CreatedUsers} key={$$$}>
-                  <div className={styles.UserNameFirstLatterOrImage}>A</div>
+                  <div className={styles.UserNameFirstLatterOrImage}>
+                    {user?.name[0]}
+                  </div>
                   <div>
                     <p className={styles.UserNameAndDeveloperType}>
                       {user?.name}

@@ -59,6 +59,7 @@
   color: #495584;
   font-size: 8px;
   text-decoration-line: underline;
+  cursor: pointer;
 }
 
 .CreatedUsersParent {

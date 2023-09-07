@@ -1,22 +1,22 @@
-import React from 'react'
-import { Navbar } from '../components/navbar/Navbar'
-import { Aside } from '../components/Aside/Aside'
-import './mainLayout.css'
-import { Route, Routes } from 'react-router-dom'
-import { Projects } from '../screens/AllProjects/Projects'
-import { Project } from '../screens/Project/Project'
-import { AddProject } from '../screens/AddProject/AddProject'
-import { EditProject } from '../screens/EditProject/EditProject'
-import { Staff } from '../screens/Staff/Staff'
-import { AddStaff } from '../screens/AddStaff/AddStaff'
-import { AddSprint } from '../screens/AddSprint/AddSprint'
-import { NotFound } from '../screens/notFound'
-import LoginPage from '../screens/LoginScreen/LoginPage'
+import React from "react";
+import { Navbar } from "../components/navbar/Navbar";
+import { Aside } from "../components/Aside/Aside";
+import "./mainLayout.css";
+import { Route, Routes } from "react-router-dom";
+import { Projects } from "../screens/AllProjects/Projects";
+import { Project } from "../screens/Project/Project";
+import { AddProject } from "../screens/AddProject/AddProject";
+import { EditProject } from "../screens/EditProject/EditProject";
+import { Staff } from "../screens/Staff/Staff";
+import { AddStaff } from "../screens/AddStaff/AddStaff";
+import { AddSprint } from "../screens/AddSprint/AddSprint";
+import { NotFound } from "../screens/notFound";
+import LoginPage from "../screens/LoginScreen/LoginPage";
 
 export const MainLayout = () => {
   return (
-    <div className={'Layout'}>
-      {!localStorage.getItem('userToken') ? (
+    <div className={"Layout"}>
+      {!localStorage.getItem("userToken") ? (
         <Routes>
           <Route exact path="/" Component={LoginPage} />
         </Routes>
@@ -25,7 +25,7 @@ export const MainLayout = () => {
           <Aside />
           <main>
             <Navbar />
-            <div className={'MainContainer'}>
+            <div className={"MainContainer"}>
               <Routes>
                 <Route exact path="/" Component={Projects} />
                 <Route exact path="/Project" Component={Project} />
@@ -41,5 +41,5 @@ export const MainLayout = () => {
         </React.Fragment>
       )}
     </div>
-  )
-}
+  );
+};
