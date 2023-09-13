@@ -6,32 +6,24 @@ import FlagMark from "../../assets/icons/flagMark.svg";
 import { useDispatch } from "react-redux";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { updateTaskSortRequest } from "../../store/authUsersReducer/updateTaskSortSlice";
-import Pusher from "pusher-js";
+import { pusher } from "../../pusher";
+import AddTaskIcon from "@mui/icons-material/AddTask";
+import { Link } from "react-router-dom";
 
 const Project = () => {
   const dispatch = useDispatch();
   const [boards, setBoards] = useState([]);
 
-  useEffect(() => {
-    let pusher = new Pusher("ee8b67274fccf540b81e", {
-      appId: "1651282",
-      secret: "0cbc75cacff02b16b2c9",
-      cluster: "ap2",
-      // encrypted: true,
+  const channel = pusher.subscribe("project-list");
+  channel.bind("task.sort-updated", function (data) {
+    dispatch(
+      getProjectColumnRequest({ id: localStorage.getItem("idea") })
+    ).then((res) => {
+      setBoards(res.payload?.payload?.statuses);
+      channel.unbind("task.sort-updated");
     });
-
-    const channel = pusher.subscribe("project-list");
-
-    channel.bind("task.sort-updated", function (data) {
-      dispatch(
-        getProjectColumnRequest({ id: localStorage.getItem("idea") })
-      ).then((res) => {
-        setBoards(res.payload?.payload?.statuses);
-        pusher.disconnect();
-      });
-      return data;
-    });
-  }, [boards, dispatch]);
+    return data;
+  });
 
   useEffect(() => {
     dispatch(
@@ -129,10 +121,15 @@ const Project = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         {boards.map((board, i) => (
           <RenderedItems key={i}>
-            <h2 className={styles.Title}>
-              {board.name} {board.id}
-              <span className={styles.SubTitle}>({board.tasks?.length})</span>
-            </h2>
+            <div className={styles.BoardTitleParent}>
+              <h2 className={styles.Title}>
+                {board.name}{" "}
+                <span className={styles.SubTitle}>({board.tasks?.length})</span>
+              </h2>
+              <Link to={"/AddTask"}>
+                <AddTaskIcon style={{ color: "black", fontSize: 18 }} />
+              </Link>
+            </div>
             <div className={styles.Line}></div>
 
             <Droppable droppableId={board.id} type="group" key={board.id}>
@@ -157,16 +154,14 @@ const Project = () => {
                             <img src={FlagMark} alt="FlagMark" />
                           </div>
                           <h3 className={styles.Complates}>Complate </h3>
-                          <div className={styles.SprintsParent}>
-                            {/*<Tasks id={item.id} title={item.description} />*/}
-                          </div>
                           <div className={styles.CreatedUsersParent}>
                             {item.users.map((user, $$) => (
                               <div className={styles.CreatedUsers} key={$$}>
-                                <div
+                                <p
                                   className={styles.UserNameFirstLatterOrImage}>
-                                  {user.name[0]}
-                                </div>
+                                  {user?.name && user?.name[0]}
+                                  {user?.name && user?.name?.split(" ")[1][0]}
+                                </p>
                                 <div>
                                   <p
                                     className={styles.UserNameAndDeveloperType}>

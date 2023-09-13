@@ -15,7 +15,7 @@ export const getAllUsersRequest = createAsyncThunk(
         `${process.env.REACT_APP_API_URL}api/organization/staff`,
         headers
       );
-      return response;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error);
     }

@@ -7,13 +7,17 @@
   height: 100%;
   background-color: #f1f2f7;
 }
+.BoardTitleParent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .Tasks {
   padding: 10px 8px;
   border: 0.5px solid #495584;
   margin-bottom: 10px;
   background-color: #ffffff;
-  
 }
 
 .Title {
@@ -70,6 +74,7 @@
   display: grid;
   place-items: center;
   color: #0e9fb3;
+  font-size: 12px;
 }
 
 .UserNameAndDeveloperType {

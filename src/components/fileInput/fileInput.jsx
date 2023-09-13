@@ -2,10 +2,15 @@ import React from "react";
 import styles from "./fileInput.module.css";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const FileInput = ({ onChange, children, value, onRemove }) => {
+const FileInput = ({ onChange, children, multiple, onRemove }) => {
   return (
     <div className={styles.FileInputParent}>
-      <input className={styles.FileInput} onChange={onChange} type={"file"} />
+      <input
+        className={styles.FileInput}
+        onChange={onChange}
+        multiple={multiple}
+        type={"file"}
+      />
       <p>{children}</p>
       <span className={styles.RemoveFile} onClick={onRemove}>
         <DeleteOutlineIcon />

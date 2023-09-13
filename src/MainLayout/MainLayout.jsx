@@ -8,7 +8,7 @@ import { AddProject } from "../screens/AddProject/AddProject";
 import { EditProject } from "../screens/EditProject/EditProject";
 import { Staff } from "../screens/Staff/Staff";
 import { AddStaff } from "../screens/AddStaff/AddStaff";
-import { AddSprint } from "../screens/AddSprint/AddSprint";
+import { AddTask } from "../screens/AddTask/AddTask";
 import { NotFound } from "../screens/notFound";
 import { LoginPage } from "../screens/LoginScreen/LoginPage";
 import Project from "../screens/Project/Project";
@@ -18,7 +18,7 @@ export const MainLayout = () => {
     <div className={"Layout"}>
       {!localStorage.getItem("userToken") ? (
         <Routes>
-          <Route exact path="/" Component={LoginPage} />
+          <Route exact="true" path="/" Component={LoginPage} />
         </Routes>
       ) : (
         <React.Fragment>
@@ -27,14 +27,18 @@ export const MainLayout = () => {
             <Navbar />
             <div className={"MainContainer"}>
               <Routes>
-                <Route exact path="/" Component={Projects} />
-                <Route exact path="/Project" Component={Project} />
-                <Route exact path="/AddProject" Component={AddProject} />
-                <Route exact path="/EditProject" Component={EditProject} />
-                <Route exact path="/Staff" Component={Staff} />
-                <Route exact path="/AddStaff" Component={AddStaff} />
-                <Route exact path="/AddSprint" Component={AddSprint} />
-                <Route exact path="*" Component={NotFound} />
+                <Route exact="true" path="/" Component={Projects} />
+                <Route exact="true" path="/Project" Component={Project} />
+                <Route exact="true" path="/AddProject" Component={AddProject} />
+                <Route
+                  exact="true"
+                  path="/EditProject"
+                  Component={EditProject}
+                />
+                <Route exact="true" path="/Staff" Component={Staff} />
+                <Route exact="true" path="/AddStaff" Component={AddStaff} />
+                <Route exact="true" path="/AddTask" Component={AddTask} />
+                <Route exact="true" path="*" Component={NotFound} />
               </Routes>
             </div>
           </main>
