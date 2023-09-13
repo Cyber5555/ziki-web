@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Http } from "../../http";
 
-export const getAllProjectsRequest = createAsyncThunk(
-  "getAllProjects",
+export const authUserDetailRequest = createAsyncThunk(
+  "user_detail",
   async ({ rejectWithValue }) => {
     const token = localStorage.getItem("userToken");
 
@@ -13,7 +13,7 @@ export const getAllProjectsRequest = createAsyncThunk(
 
     try {
       let response = await Http.get(
-        `${process.env.REACT_APP_API_URL}api/organization/projects`,
+        `${process.env.REACT_APP_API_URL}api/user-detail`,
         headers
       );
 
@@ -24,29 +24,29 @@ export const getAllProjectsRequest = createAsyncThunk(
   }
 );
 
-const getAllProjectsSlice = createSlice({
-  name: "getAllProjects",
+const authUserDetailSlice = createSlice({
+  name: "user_detail",
   initialState: {
     isLoading: false,
-    all_project_data: [],
+    user_data: [],
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllProjectsRequest.pending, (state) => {
+      .addCase(authUserDetailRequest.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getAllProjectsRequest.fulfilled, (state, action) => {
+      .addCase(authUserDetailRequest.fulfilled, (state, action) => {
         if (action.payload?.success) {
-          state.all_project_data = action.payload.payload;
+          state.user_data = action.payload.payload;
         }
 
         state.isLoading = false;
       })
-      .addCase(getAllProjectsRequest.rejected, (state) => {
+      .addCase(authUserDetailRequest.rejected, (state) => {
         state.isLoading = false;
       });
   },
 });
 
-export default getAllProjectsSlice.reducer;
+export default authUserDetailSlice.reducer;

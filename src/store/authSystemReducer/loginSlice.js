@@ -12,14 +12,14 @@ export const loginRequest = createAsyncThunk(
     form_data.append("password", data.password);
 
     try {
-      let response = Http.post(
+      let response = await Http.post(
         `${process.env.REACT_APP_API_URL}api/login`,
         myHeaders,
         form_data
       );
-      return response;
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.response);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -60,7 +60,9 @@ const loginSlice = createSlice({
 
         state.isLoading = false;
       })
-      .addCase(loginRequest.rejected, (state) => {
+      .addCase(loginRequest.rejected, (state, action) => {
+        console.log(action.payload);
+        state.isError = action?.payload.error.message;
         state.isLoading = false;
       });
   },

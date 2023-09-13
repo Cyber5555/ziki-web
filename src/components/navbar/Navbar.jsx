@@ -6,21 +6,27 @@ import styles from "./navbar.module.css";
 import SideBarIcon from "../../assets/icons/SideBarIcon.svg";
 import { useLocation } from "react-router-dom";
 import { NotificationsDropdown } from "../NotificationsDropdown/NotificationsDropdown";
+import { useDispatch } from "react-redux";
+import { authUserDetailRequest } from "../../store/authUsersReducer/authUserDetailSlice";
+import { useSelector } from "react-redux";
 
 export const Navbar = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const [pageTitle, setPageTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const { user_data } = useSelector((state) => state.authUserDetailSlice);
 
   useEffect(() => {
-    if (location.pathname == "/") {
+    dispatch(authUserDetailRequest({}));
+    if (location.pathname === "/") {
       setPageTitle("All Projects");
-    } else if (location.pathname == "/Project") {
+    } else if (location.pathname === "/Project") {
       setPageTitle(localStorage.getItem("name"));
-    } else if (location.pathname == "/AddProject") {
+    } else if (location.pathname === "/AddProject") {
       setPageTitle("Add Project");
     }
-  }, [location]);
+  }, [location, dispatch]);
 
   const toggleMenuBar = () => {
     document.querySelector(".Layout").classList.toggle("active");
@@ -48,7 +54,7 @@ export const Navbar = () => {
           onClick={() => setIsOpen(!isOpen)}
         />
         <img
-          src={NavbarAvatar}
+          src={user_data.avatar ? user_data.avatar : NavbarAvatar}
           alt={"Navbar Avatar"}
           className={styles.Avatar}
         />

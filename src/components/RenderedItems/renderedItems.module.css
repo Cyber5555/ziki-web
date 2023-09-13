@@ -1,13 +1,14 @@
 .RenderedItems {
   width: 300px;
   height: 100%;
+  min-height: 200px;
+  max-height: 100%;
   border-radius: 8px 8px 0 0;
-  border-top: 10px solid #6259CA;
-  background: #FFFFFF;
+  border-top: 10px solid #6259ca;
+  background: #ffffff;
   flex-shrink: 0;
   position: relative;
   padding: 15px;
-  
 }
 
 .RenderedItems::before {
@@ -19,7 +20,7 @@
   left: 0;
   width: 20px;
   border-top-left-radius: 10px;
-  box-shadow: 0 -10px 0 0 #6259CA;
+  box-shadow: 0 -10px 0 0 #6259ca;
 }
 
 .RenderedItems::after {
@@ -31,5 +32,5 @@
   right: 0px;
   width: 15px;
   border-top-right-radius: 10px;
-  box-shadow: 3px -10px 0px 0px #6259CA;
+  box-shadow: 3px -10px 0px 0px #6259ca;
 }

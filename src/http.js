@@ -1,16 +1,6 @@
 import axios from "axios";
 
 export class Http {
-  // static HEADERS = {
-  //   "Content-Type": "application/json",
-  //   Authorization: `Bearer ${localStorage.getItem("userToken")}`,
-  //   Accept: "application/json",
-  // };
-  // static NOT_AUTH_HEADERS = {
-  //   "Content-Type": "application/json",
-  //   Accept: "application/json",
-  // };
-
   static async get(url, headers) {
     try {
       return await request(url, "GET", headers);
@@ -54,5 +44,5 @@ async function request(url, method = "GET", headers, data) {
     config.data = data;
   }
   const response = await axios(url, config);
-  return await response.data;
+  return response;
 }

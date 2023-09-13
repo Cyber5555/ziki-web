@@ -4,14 +4,14 @@ import { Aside } from "../components/Aside/Aside";
 import "./mainLayout.css";
 import { Route, Routes } from "react-router-dom";
 import { Projects } from "../screens/AllProjects/Projects";
-import { Project } from "../screens/Project/Project";
 import { AddProject } from "../screens/AddProject/AddProject";
 import { EditProject } from "../screens/EditProject/EditProject";
 import { Staff } from "../screens/Staff/Staff";
 import { AddStaff } from "../screens/AddStaff/AddStaff";
 import { AddSprint } from "../screens/AddSprint/AddSprint";
 import { NotFound } from "../screens/notFound";
-import LoginPage from "../screens/LoginScreen/LoginPage";
+import { LoginPage } from "../screens/LoginScreen/LoginPage";
+import Project from "../screens/Project/Project";
 
 export const MainLayout = () => {
   return (

@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
-import styles from './renderedItems.module.css'
+import styles from "./renderedItems.module.css";
 
-export const RenderedItems = ({ children, style, onDragOver, onDrop }) => {
+export const RenderedItems = ({ children, style }) => {
   return (
-    <div className={styles.RenderedItems} style={style} onDragOver={onDragOver} onDrop={onDrop}>
+    <div className={styles.RenderedItems} style={style}>
       {children}
     </div>
-  )
-}
+  );
+};

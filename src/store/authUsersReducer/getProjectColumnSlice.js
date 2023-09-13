@@ -16,7 +16,7 @@ export const getProjectColumnRequest = createAsyncThunk(
         headers
       );
 
-      return response;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response);
     }
@@ -25,26 +25,23 @@ export const getProjectColumnRequest = createAsyncThunk(
 
 const getProjectColumnSlice = createSlice({
   name: "getProjectColumn",
-  initialState: {
-    isLoading: false,
-    project_columns: [],
+  initialState: [],
+  reducers: {
+    dropHandlerState: (state, action) => {},
   },
-  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getProjectColumnRequest.pending, (state) => {
-        state.isLoading = true;
+        // state.isLoading = true;
       })
       .addCase(getProjectColumnRequest.fulfilled, (state, action) => {
-        if (action.payload?.success) {
-          state.project_columns = action.payload.payload;
-        }
-        state.isLoading = false;
+        // state.isLoading = false;
       })
       .addCase(getProjectColumnRequest.rejected, (state, action) => {
-        state.isLoading = false;
+        // state.isLoading = false;
       });
   },
 });
 
 export default getProjectColumnSlice.reducer;
+export const { dropHandlerState } = getProjectColumnSlice.actions;

@@ -6,12 +6,11 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProjectsRequest } from "../../store/authUsersReducer/getAllProjectsSlice";
 import Pusher from "pusher-js";
-import { getProjectColumnRequest } from "../../store/authUsersReducer/getProjectColumnSlice";
 
 export const Projects = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, all_project_data } = useSelector(
+  const { all_project_data } = useSelector(
     (state) => state.getAllProjectsSlice
   );
 
@@ -31,7 +30,7 @@ export const Projects = () => {
 
   useEffect(() => {
     dispatch(getAllProjectsRequest({}));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className={styles.Projects}>
