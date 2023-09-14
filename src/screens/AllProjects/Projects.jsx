@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { RenderedItems } from "../../components/RenderedItems/RenderedItems";
 import styles from "./projects.module.css";
 import { BlueButton } from "../../components/buttons/blueButton/BlueButton";
@@ -10,7 +11,7 @@ import { pusher } from "../../pusher";
 export const Projects = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { all_project_data } = useSelector(
+  const { all_project_data = [] } = useSelector(
     (state) => state.getAllProjectsSlice
   );
 
@@ -55,7 +56,8 @@ export const Projects = () => {
                 // dispatch(getProjectColumnRequest({ id: board.id }));
                 navigate("/Project");
               }}>
-              View all sprints (85)
+              View all sprints (
+              {board.statuses.reduce((acc, obj) => acc + obj.count, 0)})
             </p>
             <div className={styles.CreatedUsersParent}>
               {board?.users?.map((user, $$$) => (

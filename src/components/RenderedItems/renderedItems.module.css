@@ -9,6 +9,7 @@
   flex-shrink: 0;
   position: relative;
   padding: 15px;
+  /* overflow-y: scroll; */
 }
 
 .RenderedItems::before {

@@ -35,7 +35,7 @@ export const addProjectRequest = createAsyncThunk(
         headers,
         form_data
       );
-      return response;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response);
     }

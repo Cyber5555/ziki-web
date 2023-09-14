@@ -93,3 +93,8 @@
   color: #495584;
   font-size: 8px;
 }
+
+.DroppableDiv {
+  overflow-y: scroll;
+  height: 90%;
+}

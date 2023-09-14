@@ -60,7 +60,7 @@ const Project = () => {
       });
       const new_tasks_id = newColumns.map((board) => ({
         column_id: board.id,
-        task_id: board.tasks.map((task) => task.id),
+        task_id: board.tasks.map((task) => task?.id),
         sort: board.tasks.map((_, index) => index),
       }));
 
@@ -97,7 +97,7 @@ const Project = () => {
 
       const new_tasks_id = newColumns.map((board) => ({
         column_id: board.id,
-        task_id: board.tasks.map((task) => task.id),
+        task_id: board.tasks.map((task) => task?.id),
         sort: board.tasks.map((_, index) => index),
       }));
 
@@ -126,7 +126,9 @@ const Project = () => {
                 {board.name}{" "}
                 <span className={styles.SubTitle}>({board.tasks?.length})</span>
               </h2>
-              <Link to={"/AddTask"}>
+              <Link
+                to={"/AddTask"}
+                onClick={() => localStorage.setItem("status_id", board.id)}>
                 <AddTaskIcon style={{ color: "black", fontSize: 18 }} />
               </Link>
             </div>
@@ -137,7 +139,8 @@ const Project = () => {
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  style={getListStyle(snapshot.isDraggingOver)}>
+                  style={getListStyle(snapshot.isDraggingOver)} 
+                  className={styles.DroppableDiv}>
                   {board.tasks.map((item, index) => (
                     <Draggable
                       draggableId={item.id}

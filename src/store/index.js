@@ -7,6 +7,7 @@ import getAllUsersSlice from "./authUsersReducer/getAllUsersSlice";
 import getProjectColumnSlice from "./authUsersReducer/getProjectColumnSlice";
 import authUserDetailSlice from "./authUsersReducer/authUserDetailSlice";
 import updateTaskSortSlice from "./authUsersReducer/updateTaskSortSlice";
+import addTaskSlice from "./authUsersReducer/addTaskSlice";
 
 const rootReducer = combineReducers({
   loginSlice: loginSlice,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   getAllUsersSlice: getAllUsersSlice,
   getProjectColumnSlice: getProjectColumnSlice,
   authUserDetailSlice: authUserDetailSlice,
-  updateTaskSortSlice:updateTaskSortSlice
+  updateTaskSortSlice: updateTaskSortSlice,
+  addTaskSlice: addTaskSlice,
 });
 
 export const store = configureStore({

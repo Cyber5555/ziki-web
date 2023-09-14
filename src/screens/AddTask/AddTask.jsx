@@ -9,26 +9,26 @@ import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { addProjectRequest } from "../../store/authUsersReducer/addProjectSlice";
 import { ClipLoader } from "react-spinners";
 import { getAllUsersRequest } from "../../store/authUsersReducer/getAllUsersSlice";
 import UserList from "../../components/UserList/UserList";
 import { useNavigate } from "react-router-dom";
 import FileInput from "../../components/fileInput/fileInput";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { addTaskRequest } from "../../store/authUsersReducer/addTaskSlice";
 
 export const AddTask = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [projectName, setProjectName] = useState("");
+  const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState(moment(new Date()));
   const [endDate, setEndDate] = useState(moment(new Date()));
-  const [projectLogo, setProjectLogo] = useState([]);
+  const [taskImages, setTaskImages] = useState([]);
 
   const [openUserList, setOpenUserList] = useState(false);
   const { isLoading, errorMessages } = useSelector(
-    (state) => state.addProjectSlice
+    (state) => state.addTaskSlice
   );
   const { all_users } = useSelector((state) => state.getAllUsersSlice);
 
@@ -38,30 +38,33 @@ export const AddTask = () => {
     let new_images = Object.values(images).map((image) => {
       return image;
     });
-    setProjectLogo(new_images);
+    setTaskImages(new_images);
   };
 
   const removeOneImage = (image) => {
-    const new_projectLogo = [...projectLogo];
-    const imageIndex = projectLogo.indexOf(image);
+    const new_projectLogo = [...taskImages];
+    const imageIndex = taskImages.indexOf(image);
     new_projectLogo.splice(imageIndex, 1);
-    setProjectLogo(new_projectLogo);
+    setTaskImages(new_projectLogo);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(
-      addProjectRequest({
-        projectName,
+      addTaskRequest({
+        name: taskName,
+        project_id: localStorage.getItem("idea"),
         description,
-        startDate: moment(startDate).format("DD.MM.YYYY"),
-        endDate: moment(endDate).format("DD.MM.YYYY"),
-        users: selectedUsers,
-        projectLogo,
+        status_id: localStorage.getItem("status_id"),
+        start_date: moment(startDate).format("DD.MM.YYYY"),
+        end_date: moment(endDate).format("DD.MM.YYYY"),
+        image: taskImages,
+        taskName,
+        user_ids: selectedUsers,
       })
     ).then((res) => {
       if (res.payload?.success) {
-        navigate("/", {
+        navigate("/Project", {
           replace: true,
         });
       }
@@ -87,8 +90,8 @@ export const AddTask = () => {
           <input
             className={styles.ProjectTitle}
             placeholder={"Task name"}
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
+            value={taskName}
+            onChange={(e) => setTaskName(e.target.value)}
             type="text"
           />
           <p className={styles.ErrorMessage}>{errorMessages?.name}</p>
@@ -139,15 +142,15 @@ export const AddTask = () => {
               multiple={true}
               onChange={(e) => handleGetImages(e.target.files)}
               onRemove={() => {
-                setProjectLogo([]);
+                setTaskImages([]);
               }}>
-              {projectLogo.length
-                ? "Selected count " + projectLogo.length
+              {taskImages.length
+                ? "Selected count " + taskImages.length
                 : "+ Add Photo"}
             </FileInput>
           </div>
           <div className={styles.ImagesParent}>
-            {projectLogo?.map((image) => (
+            {taskImages?.map((image) => (
               <div className={styles.SelectedImagesParent} key={image.name}>
                 <div className={styles.ImageName}>
                   <img
@@ -185,25 +188,27 @@ export const AddTask = () => {
             {/* <img src={EditIcon} alt="Edit Icon" style={{ cursor: "pointer" }} /> */}
           </div>
 
-          {all_users?.map(
-            (user, index) =>
-              selectedUsers.includes(user.id) && (
-                <div className={styles.CreatedUsers} key={index}>
-                  <p className={styles.UserNameFirstLatterOrImage}>
-                    {user?.name && user?.name[0]}
-                    {user?.name && user?.name?.split(" ")[1][0]}
-                  </p>
-                  <div>
-                    <p className={styles.UserNameAndDeveloperType}>
-                      {user.name}
+          <div className={styles.UsersList}>
+            {all_users?.map(
+              (user, index) =>
+                selectedUsers.includes(user.id) && (
+                  <div className={styles.CreatedUsers} key={index}>
+                    <p className={styles.UserNameFirstLatterOrImage}>
+                      {user?.name && user?.name[0]}
+                      {user?.name && user?.name?.split(" ")[1][0]}
                     </p>
-                    <p className={styles.UserNameAndDeveloperType}>
-                      Front-end (50/15)
-                    </p>
+                    <div>
+                      <p className={styles.UserNameAndDeveloperType}>
+                        {user.name}
+                      </p>
+                      <p className={styles.UserNameAndDeveloperType}>
+                        Front-end (50/15)
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )
-          )}
+                )
+            )}
+          </div>
 
           <BlueButton
             style={{ position: "absolute", right: 20, bottom: 20 }}

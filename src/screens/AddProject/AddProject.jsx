@@ -47,7 +47,8 @@ export const AddProject = () => {
         projectTz,
       })
     ).then((res) => {
-      if (res.payload?.success) {
+      console.log(res.payload.payload.original.success);
+      if (res.payload?.payload?.original?.success) {
         navigate("/", {
           replace: true,
         });
