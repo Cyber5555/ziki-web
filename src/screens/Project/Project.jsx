@@ -9,10 +9,12 @@ import { updateTaskSortRequest } from "../../store/authUsersReducer/updateTaskSo
 import { pusher } from "../../pusher";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import { Link } from "react-router-dom";
+import TaskModal from "../../components/TaskModal/TaskModal";
 
 const Project = () => {
   const dispatch = useDispatch();
   const [boards, setBoards] = useState([]);
+  const [openTaskModal, setOpenTaskModal] = useState(false);
 
   const channel = pusher.subscribe("project-list");
   channel.bind("task.sort-updated", function (data) {
@@ -116,6 +118,14 @@ const Project = () => {
     paddingBottom: 10,
   });
 
+  const openTaskModalFunc = () => {
+    setOpenTaskModal(true);
+  };
+
+  const closeTaskModalFunc = () => {
+    setOpenTaskModal(false);
+  };
+
   return (
     <div className={styles.Project}>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -139,7 +149,7 @@ const Project = () => {
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  style={getListStyle(snapshot.isDraggingOver)} 
+                  style={getListStyle(snapshot.isDraggingOver)}
                   className={styles.DroppableDiv}>
                   {board.tasks.map((item, index) => (
                     <Draggable
@@ -151,7 +161,8 @@ const Project = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          className={styles.Tasks}>
+                          className={styles.Tasks}
+                          onClick={openTaskModalFunc}>
                           <div className={styles.TaskName}>
                             <p>{item.name}</p>
                             <img src={FlagMark} alt="FlagMark" />
@@ -197,6 +208,7 @@ const Project = () => {
           </RenderedItems>
         ))}
       </DragDropContext>
+      <TaskModal isOpen={openTaskModal} close={closeTaskModalFunc} />
     </div>
   );
 };

@@ -1,0 +1,68 @@
+.Background {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(10px);
+  z-index: 100;
+}
+
+.BackgroundClosed {
+  display: none;
+}
+
+.CheckListParent {
+  position: absolute;
+  inset: 15% 30%;
+  background-color: white;
+  border-radius: 30px;
+  padding: 40px 30px;
+}
+
+.CheckList {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  padding: 10px 20px;
+}
+
+.ExitIsList {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  cursor: pointer;
+}
+.ChecksParent {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+.Checks {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.TextAreaElement {
+  width: 90%;
+  resize: vertical;
+  overflow: hidden;
+  padding: 5px;
+  min-height: 30px;
+  border: none;
+  outline: none;
+}
+.TextAreaElement:focus {
+  border: 1px solid #5b50a4;
+}
+
+.CancelSaveParent {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
+}

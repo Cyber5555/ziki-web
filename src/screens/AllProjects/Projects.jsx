@@ -26,6 +26,7 @@ export const Projects = () => {
     dispatch(getAllProjectsRequest({}));
   }, [dispatch]);
 
+  
   return (
     <div className={styles.Projects}>
       {all_project_data?.map((board, $) => (
@@ -46,9 +47,6 @@ export const Projects = () => {
             max={100}></progress>
 
           <div className={styles.SprintsParent}>
-            {/* {board?.statuses?.map((task, $$) => (
-              <Sprints key={$$} title={task?.name} />
-            ))} */}
             <p
               className={styles.ShowAllSprints}
               onClick={() => {
