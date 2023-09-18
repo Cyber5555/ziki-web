@@ -6,7 +6,10 @@
   border: 1px solid #6259ca;
   background: #fff;
   cursor: pointer;
-  height: 40px;
   display: grid;
   place-items: center;
+  min-width: 80px;
+  min-height: 35px;
+  outline: none;
+  text-align: center;
 }
