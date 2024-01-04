@@ -1,8 +1,10 @@
 .Link {
   position: fixed;
+  display: inline-block;
   right: 50px;
   bottom: 50px;
   outline: none;
+  border: none;
   z-index: 10;
   color: #fff;
   font-size: 12px;
@@ -12,4 +14,6 @@
   text-align: center;
   min-width: 80px;
   min-height: 35px;
+  height: fit-content;
+  cursor: pointer;
 }

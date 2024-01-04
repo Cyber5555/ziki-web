@@ -1,9 +1,24 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Http } from "../../http";
+
+interface AddTaskData {
+  name: string;
+  project_id: string;
+  description: string;
+  status_id: string;
+  start_date: string;
+  end_date: string;
+  image: FileList;
+  user_ids: string[];
+}
+
+interface AddTaskState {
+  isLoading: boolean;
+}
 
 export const addTaskRequest = createAsyncThunk(
   "add_task",
-  async (data, { rejectWithValue }) => {
+  async (data: AddTaskData, { rejectWithValue }) => {
     const token = localStorage.getItem("userToken");
 
     let headers = {
@@ -42,20 +57,25 @@ const addTaskSlice = createSlice({
   name: "add_task",
   initialState: {
     isLoading: false,
-  },
+  } as AddTaskState,
+  
   reducers: {},
+
   extraReducers: (builder) => {
     builder
       .addCase(addTaskRequest.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(addTaskRequest.fulfilled, (state, action) => {
-        // if (action.payload?.success) {
+      .addCase(
+        addTaskRequest.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          // if (action.payload?.success) {
 
-        // }
+          // }
 
-        state.isLoading = false;
-      })
+          state.isLoading = false;
+        }
+      )
       .addCase(addTaskRequest.rejected, (state) => {
         state.isLoading = false;
       });

@@ -1,11 +1,16 @@
-/* eslint-disable react/prop-types */
 import styles from "./blueButton.module.css";
-import { Link } from "react-router-dom";
 
-export const BlueButton = ({ to, style, children, onClick }) => {
+const BlueButton = ({ disabled, style, children, onClick, type }) => {
   return (
-    <Link to={to} className={styles.Link} style={style} onClick={onClick}>
+    <button
+      className={styles.Link}
+      type={type}
+      style={style}
+      onClick={onClick}
+      disabled={disabled}>
       {children}
-    </Link>
+    </button>
   );
 };
+
+export { BlueButton };

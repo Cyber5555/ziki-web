@@ -14,15 +14,15 @@
   border-right: 0.5px solid rgba(138, 152, 172, 0.1);
 }
 
-
 .Aside {
-  background-color: #FFF;
+  background-color: #fff;
   box-shadow: 7px 4px 12px 0 rgba(138, 152, 172, 0.04);
   height: 100vh;
+  overflow: hidden;
 }
 
 .SideBarUl {
-  padding: 20px 20px 0;
+  padding: 20px 0 20px 10px;
   width: 100%;
 }
 
@@ -30,12 +30,58 @@
   color: #495584;
   font-size: 14px;
   height: 50px;
-
-}
-
-.List2 {
-  border-bottom: .5px dashed rgba(75, 88, 133, 0.15);;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-right: 20px;
+  position: relative;
+  border-bottom: 0.5px dashed rgba(75, 88, 133, 0.15);
+}
+
+.SideBarList.active::before {
+  content: "";
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  /* background: #6259ca; */
+  right: 0;
+  top: -22px;
+  border-radius: 50%;
+  box-shadow: 5px 5px 2px #6259ca;
+}
+
+.SideBarList.active::after {
+  content: "";
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  /* background: #6259ca; */
+  right: 0px;
+  bottom: -22px;
+  border-radius: 50%;
+  box-shadow: 5px -5px 2px #6259ca;
+}
+
+.SideBarList.active {
+  border-radius: 20px 0 0 20px;
+  background: #6259ca;
+}
+
+.SideBarList.active .SideBarIcons {
+  color: white;
+}
+
+.SideBarIcons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition:
+    gap 0.25s linear,
+    padding-left 0.25s linear;
+  padding-left: 10px;
+}
+
+.SideBarIcons.opened {
+  gap: 30px;
+  padding-left: 15px;
 }

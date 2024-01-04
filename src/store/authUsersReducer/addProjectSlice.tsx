@@ -1,9 +1,31 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Http } from "../../http";
+
+interface AddProjectData {
+  projectName: string;
+  description?: string;
+  startDate: string;
+  endDate: string;
+  users: string[];
+  projectLogo: File;
+  projectTz: File;
+  data: any;
+}
+
+interface ErrorResponse {
+  data: {
+    errors: Record<string, string>;
+  };
+}
+
+interface AddProjectState {
+  isLoading: boolean;
+  errorMessages: Record<string, string> | null;
+}
 
 export const addProjectRequest = createAsyncThunk(
   "add_project",
-  async (data, { rejectWithValue }) => {
+  async (data: AddProjectData, { rejectWithValue }) => {
     const token = localStorage.getItem("userToken");
     let headers = {
       Accept: "application/json",
@@ -22,10 +44,10 @@ export const addProjectRequest = createAsyncThunk(
       form_data.append("users[]", data.users[i]);
     }
 
-    if (Object.keys(data.projectLogo).length) {
+    if (data.projectLogo) {
       form_data.append("project_logo", data.projectLogo);
     }
-    if (Object.keys(data.projectTz).length) {
+    if (data.projectTz) {
       form_data.append("project_tz", data.projectTz);
     }
 
@@ -46,21 +68,22 @@ const addProjectSlice = createSlice({
   name: "add_project",
   initialState: {
     isLoading: false,
-    // all_project_data: [],
-    errorMessages: {},
-  },
+    errorMessages: null,
+  } as AddProjectState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(addProjectRequest.pending, (state) => {
         state.isLoading = true;
+        state.errorMessages = null;
       })
-      .addCase(addProjectRequest.fulfilled, (state, action) => {
+      .addCase(addProjectRequest.fulfilled, (state) => {
         state.isLoading = false;
       })
       .addCase(addProjectRequest.rejected, (state, action) => {
-        state.errorMessages = action.payload?.data?.errors;
+        const { errors } = (action.payload as ErrorResponse).data;
 
+        state.errorMessages = errors;
         state.isLoading = false;
       });
   },

@@ -1,9 +1,14 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Http } from "../../http";
+
+interface UserDetailResponse {
+  success: boolean;
+  payload: any[]; // Replace 'any[]' with the actual type of payload data
+}
 
 export const authUserDetailRequest = createAsyncThunk(
   "user_detail",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     const token = localStorage.getItem("userToken");
 
     let headers = {
@@ -17,19 +22,24 @@ export const authUserDetailRequest = createAsyncThunk(
         headers
       );
 
-      return response.data;
+      return response.data as UserDetailResponse;
     } catch (error) {
       return rejectWithValue(error.response);
     }
   }
 );
 
+interface AuthUserDetailState {
+  isLoading: boolean;
+  user_data: any[]; // Replace 'any[]' with the actual type of user_data
+}
+
 const authUserDetailSlice = createSlice({
   name: "user_detail",
   initialState: {
     isLoading: false,
     user_data: [],
-  },
+  } as AuthUserDetailState,
   reducers: {},
   extraReducers: (builder) => {
     builder

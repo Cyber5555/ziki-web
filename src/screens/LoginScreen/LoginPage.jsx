@@ -5,7 +5,7 @@ import Input from "../../components/inputs/input";
 import {
   clearErrorLogin,
   loginRequest,
-} from "../../store/authSystemReducer/loginSlice";
+} from "../../store/authSystemReducer/loginSlice.tsx";
 import { ClipLoader } from "react-spinners";
 import { Button } from "@mui/material";
 

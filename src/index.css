@@ -34,4 +34,6 @@ ul {
   list-style: none;
 }
 
-
+.tox-statusbar__branding {
+  display: none !important;
+}

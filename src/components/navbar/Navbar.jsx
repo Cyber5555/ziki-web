@@ -6,30 +6,35 @@ import styles from "./navbar.module.css";
 import SideBarIcon from "../../assets/icons/SideBarIcon.svg";
 import { useLocation } from "react-router-dom";
 import { NotificationsDropdown } from "../NotificationsDropdown/NotificationsDropdown";
-import { useDispatch } from "react-redux";
-import { authUserDetailRequest } from "../../store/authUsersReducer/authUserDetailSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { authUserDetailRequest } from "../../store/authUsersReducer/authUserDetailSlice.tsx";
+import { toggleAside } from "../../store/otherSlice/openAsideSlice.tsx";
+import { changeTitle } from "../../store/otherSlice/pageTitleSlice.tsx";
 
 export const Navbar = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const [pageTitle, setPageTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { user_data } = useSelector((state) => state.authUserDetailSlice);
+  const { page_title } = useSelector((state) => state.pageTitleSlice);
 
   useEffect(() => {
     dispatch(authUserDetailRequest({}));
     if (location.pathname === "/") {
-      setPageTitle("All Projects");
-    } else if (location.pathname === "/Project") {
-      setPageTitle(localStorage.getItem("name"));
-    } else if (location.pathname === "/AddProject") {
-      setPageTitle("Add Project");
+      dispatch(changeTitle({ title: "All Projects" }));
+    } else if (location.pathname === "/staff") {
+      dispatch(changeTitle({ title: "Staff" }));
+    } else if (location.pathname === "/calendar") {
+      dispatch(changeTitle({ title: "Calendar" }));
+    } else if (location.pathname === "/chat") {
+      dispatch(changeTitle({ title: "Chat" }));
+    } else if (location.pathname === "/settings") {
+      dispatch(changeTitle({ title: "Settings" }));
     }
   }, [location, dispatch]);
 
   const toggleMenuBar = () => {
-    document.querySelector(".Layout").classList.toggle("active");
+    dispatch(toggleAside());
   };
 
   return (
@@ -41,7 +46,7 @@ export const Navbar = () => {
           onClick={toggleMenuBar}
           style={{ cursor: "pointer" }}
         />
-        <h2 className={styles.Title}>{pageTitle}</h2>
+        <h2 className={styles.Title}>{page_title}</h2>
       </div>
       <div className={styles.NavbarRightSide}>
         {/*search*/}

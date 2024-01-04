@@ -1,59 +1,102 @@
-import React from 'react'
-
-import Ziki from '../../assets/icons/ziki.svg'
-import robot_eset from '../../assets/images/robot-eset.png'
-import styles from './aside.module.css'
-import ArrowRight from '../../assets/icons/arrowRight.svg'
-import { Link } from 'react-router-dom'
+import React from "react";
+import Ziki from "../../assets/icons/ziki.svg";
+import robot_eset from "../../assets/images/robot-eset.png";
+import styles from "./aside.module.css";
+import ArrowRight from "../../assets/icons/arrowRight.svg";
+import { Link, NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
+import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
+import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded";
+import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
+import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
 
 export const Aside = () => {
+  const { isOpenAside } = useSelector((state) => state.openAsideSlice);
+
   return (
     <aside className={styles.Aside}>
       <div className={styles.SideBarHeader}>
-        <img src={robot_eset} className={styles.RobotEset} alt='robot_eset'/>
-        <img src={Ziki} alt={'Ziki'} />
+        <img src={robot_eset} className={styles.RobotEset} alt="robot_eset" />
+        <img src={Ziki} alt={"Ziki"} />
       </div>
 
       <ul className={styles.SideBarUl}>
-        <Link to={'/'}>
-          <li className={styles.SideBarList}>Home</li>
-        </Link>
-
-        <Link to={'/Staff'}>
-          <li className={`${styles.SideBarList} ${styles.List2}`}>
+        <NavLink
+          to={"/staff"}
+          className={({ isActive }) =>
+            `${styles.SideBarList} ${isActive ? styles.active : ""}`
+          }>
+          <span
+            className={`${styles.SideBarIcons} ${
+              !isOpenAside ? styles.opened : ""
+            }`}>
+            <PeopleRoundedIcon />
             Staff
-            <img src={ArrowRight} alt={'ArrowRight'} />
-          </li>
-        </Link>
+          </span>
+          <img src={ArrowRight} alt={"ArrowRight"} />
+        </NavLink>
 
-        <Link to={'/'}>
-          <li className={`${styles.SideBarList} ${styles.List2}`}>
+        <NavLink
+          to={"/"}
+          className={({ isActive }) =>
+            `${styles.SideBarList} ${isActive ? styles.active : ""}`
+          }>
+          <span
+            className={`${styles.SideBarIcons} ${
+              !isOpenAside ? styles.opened : ""
+            }`}>
+            <AccountTreeRoundedIcon />
             Project
-            <img src={ArrowRight} alt={'ArrowRight'} />
-          </li>
-        </Link>
+          </span>
+          <img src={ArrowRight} alt={"ArrowRight"} />
+        </NavLink>
 
-        <Link to={'/Calendar'}>
-          <li className={`${styles.SideBarList} ${styles.List2}`}>
+        <NavLink
+          to={"/calendar"}
+          className={({ isActive }) =>
+            `${styles.SideBarList} ${isActive ? styles.active : ""}`
+          }>
+          <span
+            className={`${styles.SideBarIcons} ${
+              !isOpenAside ? styles.opened : ""
+            }`}>
+            <CalendarMonthRoundedIcon />
             Calendar
-            <img src={ArrowRight} alt={'ArrowRight'} />
-          </li>
-        </Link>
+          </span>
+          <img src={ArrowRight} alt={"ArrowRight"} />
+        </NavLink>
 
-        <Link to={'/Chat'}>
-          <li className={`${styles.SideBarList} ${styles.List2}`}>
+        <NavLink
+          to={"/chat"}
+          className={({ isActive }) =>
+            `${styles.SideBarList} ${isActive ? styles.active : ""}`
+          }>
+          <span
+            className={`${styles.SideBarIcons} ${
+              !isOpenAside ? styles.opened : ""
+            }`}>
+            <MessageRoundedIcon />
             Chat
-            <img src={ArrowRight} alt={'ArrowRight'} />
-          </li>
-        </Link>
+          </span>
+          <img src={ArrowRight} alt={"ArrowRight"} />
+        </NavLink>
 
-        <Link to={'/Settings'}>
-          <li className={`${styles.SideBarList} ${styles.List2}`}>
+        <NavLink
+          to={"/settings"}
+          className={({ isActive }) =>
+            `${styles.SideBarList} ${isActive ? styles.active : ""}`
+          }>
+          <span
+            className={`${styles.SideBarIcons} ${
+              !isOpenAside ? styles.opened : ""
+            }`}>
+            <SettingsSuggestRoundedIcon />
             Settings
-            <img src={ArrowRight} alt={'ArrowRight'} />
-          </li>
-        </Link>
+          </span>
+          <img src={ArrowRight} alt={"ArrowRight"} />
+        </NavLink>
       </ul>
     </aside>
-  )
-}
+  );
+};

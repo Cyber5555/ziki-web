@@ -1,9 +1,14 @@
 import { Http } from "../../http";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface UserData {
+  success: boolean;
+  payload: any[]; // Replace 'any[]' with the actual type of payload data
+}
 
 export const getAllUsersRequest = createAsyncThunk(
   "getAllUsers",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     const token = localStorage.getItem("userToken");
     let headers = {
       Accept: "application/json",
@@ -15,19 +20,24 @@ export const getAllUsersRequest = createAsyncThunk(
         `${process.env.REACT_APP_API_URL}api/organization/staff`,
         headers
       );
-      return response.data;
+      return response.data as UserData;
     } catch (error) {
       return rejectWithValue(error);
     }
   }
 );
 
+interface GetAllUsersState {
+  isLoading: boolean;
+  all_users: any[]; // Replace 'any[]' with the actual type of all_users
+}
+
 const getAllUsersSlice = createSlice({
   name: "getAllUsers",
   initialState: {
     isLoading: false,
     all_users: [],
-  },
+  } as GetAllUsersState,
   reducers: {},
   extraReducers: (builder) => {
     builder

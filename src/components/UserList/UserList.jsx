@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./userList.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSelectUser } from "../../store/otherSlice/addUserInProjectSlice";
+import { toggleSelectUser } from "../../store/otherSlice/addUserInProjectSlice.tsx";
 
 const UserList = ({ isOpen, close }) => {
   const dispatch = useDispatch();

@@ -1,12 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface AddUserInProjectState {
+  selectedUsers: string[]; // Adjust the type based on the type of your user IDs
+}
+
+const initialState: AddUserInProjectState = {
+  selectedUsers: [],
+};
 
 const addUserInProjectSlice = createSlice({
   name: "addUserInProjectSlice",
-  initialState: {
-    selectedUsers: [],
-  },
+  initialState,
   reducers: {
-    toggleSelectUser: (state, action) => {
+    toggleSelectUser: (state, action: PayloadAction<string>) => {
       const userId = action.payload;
       const selectedIndex = state.selectedUsers.indexOf(userId);
 
@@ -18,5 +24,6 @@ const addUserInProjectSlice = createSlice({
     },
   },
 });
+
 export default addUserInProjectSlice.reducer;
 export const { toggleSelectUser } = addUserInProjectSlice.actions;

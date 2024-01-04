@@ -1,109 +1,146 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styles from "./taskModal.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckBoxList from "./CheckBoxList";
 import { BlueButton } from "../buttons/blueButton/BlueButton";
+import Description from "./Description";
+import { BorderButton } from "../buttons/borderButton/BorderButton";
+import DOMPurify from "dompurify";
 
 const TaskModal = ({ isOpen, close }) => {
-  const [height, setHeight] = useState(30);
-  const textareaRef = useRef(null);
+  const [isOpenChecklist, setIsOpenChecklist] = useState(false);
+  const [isOpenDescription, setIsOpenDescription] = useState(false);
+  const [descriptionData, setDescriptionDate] = useState(null);
 
-  const [orders, setOrders] = useState([
-    {
-      id: Math.random().toString(),
-      text: "guyny poxel",
-      checked: false,
-      hasChecked: true,
-    },
-    {
-      id: Math.random().toString(),
-      text: "buttony poxel",
-      checked: false,
-      hasChecked: true,
-    },
-    {
-      id: Math.random().toString(),
-      text: "",
-      checked: false,
-      hasChecked: false,
-    },
-  ]);
+  if (isOpen) {
+    document.body.style.overflow = "hidden";
+  }
 
-  const handleInput = (event) => {
-    console.log(event.target);
-    if (event.target.offsetHeight < event.target.scrollHeight)
-      setHeight(event.target.scrollHeight);
-
-    const lines = textareaRef.current.textContent.split("\n");
-    console.log(lines.length);
-    return lines.length;
-  };
-
-  const handleChangeText = (itemId, newText) => {
-    setOrders((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId ? { ...item, text: newText } : item
-      )
-    );
-  };
-
-  const handleSave = (event) => {
-    event.preventDefault();
-    alert("Save");
-  };
-
-  const handleCancel = (event) => {
-    event.preventDefault();
-    alert("Cancel");
-  };
-
-  const toggleCheckbox = (itemId) => {
-    setOrders((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId ? { ...item, checked: !item.checked } : item
-      )
-    );
-  };
-
-  const [focusedItemId, setFocusedItemId] = useState(null);
-
-  const isFocused = (itemId) => {
-    setFocusedItemId(itemId);
-  };
-
-  const isBlur = () => {
-    setFocusedItemId(null);
-  };
   return (
-    <div className={`${isOpen ? styles.Background : styles.BackgroundClosed}`}>
-      <div className={styles.CheckListParent}>
-        <span className={styles.ExitIsList} onClick={close}>
-          <CloseIcon />
-        </span>
-
-        <input value={"Header"} className={styles.InputElement} />
-        <h3 className={styles.CheckListTitle}>Check List</h3>
-        <div className={styles.CheckList}>
-          {orders.map((item, i) => (
-            <CheckBoxList
-              key={item.id}
-              item={item}
-              handleChange={(e) => handleChangeText(item.id, e.target.value)}
-              handleInput={handleInput}
-              height={height}
-              textareaRef={textareaRef}
-              handleSave={handleSave}
-              handleCancel={handleCancel}
-              handleCheckboxChange={() => toggleCheckbox(item.id)}
-              focused={focusedItemId}
-              isFocused={(e) => isFocused(item.id)}
-              isBlur={isBlur}
+    <div
+      className={`${isOpen ? styles.Background : styles.BackgroundClosed}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        close();
+      }}>
+      <div className={styles.Scrollbar}>
+        <div
+          className={styles.TaskModalParent}
+          onClick={(e) => e.stopPropagation()}>
+          <div className={styles.CoversParent}>
+            <span className={styles.ExitIsList} onClick={close}>
+              <CloseIcon htmlColor="black" />
+            </span>
+            <img
+              src={require("../../assets/images/projectLogo.png")}
+              alt=""
+              className={styles.CoversImage}
             />
-          ))}
+            <BlueButton
+              style={{
+                position: "absolute",
+                bottom: 10,
+                right: 10,
+              }}>
+              Covers
+            </BlueButton>
+          </div>
+
+          <div className={styles.TaskModalWrapper}>
+            <div className={styles.ComponentParent}>
+              <input value={"Header"} className={styles.InputElement} />
+              <h3 className={styles.DescriptionTitle}>Description</h3>
+
+              {isOpenDescription ? (
+                <div>
+                  <Description
+                    description={descriptionData}
+                    setDescription={setDescriptionDate}
+                  />
+                  <div className={styles.DescriptionButtonsParent}>
+                    <BlueButton
+                      onClick={() => setIsOpenDescription(false)}
+                      style={{ position: "static" }}>
+                      Save
+                    </BlueButton>
+                    <BorderButton
+                      onClick={() => {
+                        setIsOpenDescription(false);
+                        setDescriptionDate(null);
+                      }}>
+                      Cancel
+                    </BorderButton>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsOpenDescription(true)}
+                  className={styles.AddDescription}>
+                  {descriptionData ? (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(descriptionData, {
+                          ALLOWED_TAGS: [
+                            "p",
+                            "span",
+                            "strong",
+                            "em",
+                            "b",
+                            "u",
+                            "i",
+                            "ol",
+                            "ul",
+                            "li",
+                            "br",
+                            "h1",
+                            "h2",
+                            "h3",
+                          ],
+                          ALLOWED_ATTR: ["style"],
+                          FORBID_TAGS: ["style"],
+                          FORBID_ATTR: ["style"],
+                        }),
+                      }}
+                    />
+                  ) : (
+                    "Add Description"
+                  )}
+                </button>
+              )}
+              {isOpenChecklist && (
+                <input
+                  className={styles.CheckListTitle}
+                  defaultValue={"Check List"}
+                />
+              )}
+              {isOpenChecklist && <CheckBoxList />}
+            </div>
+            <div className={styles.RightBar}>
+              <label
+                htmlFor="checklist"
+                className={styles.CheckBoxListOpen}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  // e.preventDefault();
+                  setIsOpenChecklist(!isOpenChecklist);
+                }}>
+                <input
+                  type="checkbox"
+                  checked={isOpenChecklist}
+                  className={styles.CheckBox}
+                  id="checklist"
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    // e.preventDefault();
+                    setIsOpenChecklist(!isOpenChecklist);
+                  }}
+                />
+                Check list
+              </label>
+            </div>
+          </div>
         </div>
-        {!focusedItemId && (
-          <BlueButton style={{ position: "static" }}>Add List</BlueButton>
-        )}
       </div>
     </div>
   );

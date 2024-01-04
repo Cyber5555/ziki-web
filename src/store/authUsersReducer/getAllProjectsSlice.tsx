@@ -1,9 +1,14 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Http } from "../../http";
+
+interface ProjectData {
+  success: boolean;
+  payload: any[]; // Replace 'any[]' with the actual type of payload data
+}
 
 export const getAllProjectsRequest = createAsyncThunk(
   "getAllProjects",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     const token = localStorage.getItem("userToken");
 
     let headers = {
@@ -17,19 +22,24 @@ export const getAllProjectsRequest = createAsyncThunk(
         headers
       );
 
-      return response.data;
+      return response.data as ProjectData;
     } catch (error) {
       return rejectWithValue(error.response);
     }
   }
 );
 
+interface GetAllProjectsState {
+  isLoading: boolean;
+  all_project_data: any[]; // Replace 'any[]' with the actual type of all_project_data
+}
+
 const getAllProjectsSlice = createSlice({
   name: "getAllProjects",
   initialState: {
     isLoading: false,
     all_project_data: [],
-  },
+  } as GetAllProjectsState,
   reducers: {},
   extraReducers: (builder) => {
     builder

@@ -1,39 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { RenderedItems } from "../../components/RenderedItems/RenderedItems";
 import styles from "./project.module.css";
-import { getProjectColumnRequest } from "../../store/authUsersReducer/getProjectColumnSlice";
+import { getProjectColumnRequest } from "../../store/authUsersReducer/getProjectColumnSlice.tsx";
 import FlagMark from "../../assets/icons/flagMark.svg";
 import { useDispatch } from "react-redux";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { updateTaskSortRequest } from "../../store/authUsersReducer/updateTaskSortSlice";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { updateTaskSortRequest } from "../../store/authUsersReducer/updateTaskSortSlice.tsx";
 import { pusher } from "../../pusher";
 import AddTaskIcon from "@mui/icons-material/AddTask";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import TaskModal from "../../components/TaskModal/TaskModal";
+import { changeTitle } from "../../store/otherSlice/pageTitleSlice.tsx";
+import { BlueButton } from "../../components/buttons/blueButton/BlueButton.jsx";
+import { addBoardRequest } from "../../store/authUsersReducer/addBoardSlice.tsx";
 
 const Project = () => {
   const dispatch = useDispatch();
   const [boards, setBoards] = useState([]);
+  const [full_data, setFullData] = useState([]);
   const [openTaskModal, setOpenTaskModal] = useState(false);
+  const [newBoardName, setNewBoardName] = useState("");
+  const { board_id } = useParams();
 
   const channel = pusher.subscribe("project-list");
   channel.bind("task.sort-updated", function (data) {
-    dispatch(
-      getProjectColumnRequest({ id: localStorage.getItem("idea") })
-    ).then((res) => {
+    dispatch(getProjectColumnRequest({ id: board_id })).then((res) => {
       setBoards(res.payload?.payload?.statuses);
+      setFullData(res.payload?.payload);
       channel.unbind("task.sort-updated");
     });
     return data;
   });
 
   useEffect(() => {
-    dispatch(
-      getProjectColumnRequest({ id: localStorage.getItem("idea") })
-    ).then((res) => {
+    dispatch(getProjectColumnRequest({ id: board_id })).then((res) => {
       setBoards(res.payload?.payload?.statuses);
+      setFullData(res.payload?.payload);
     });
-  }, [dispatch]);
+    dispatch(changeTitle({ title: full_data.name }));
+  }, [dispatch, board_id, full_data.name]);
 
   function onDragEnd(result) {
     const { draggableId, source, destination } = result;
@@ -60,6 +65,7 @@ const Project = () => {
         }
         return column;
       });
+
       const new_tasks_id = newColumns.map((board) => ({
         column_id: board.id,
         task_id: board.tasks.map((task) => task?.id),
@@ -70,12 +76,14 @@ const Project = () => {
       dispatch(
         updateTaskSortRequest({
           board_data: JSON.stringify(new_tasks_id),
+          board_id,
         })
       );
     } else {
       const draggedTask = sourceColumn.tasks.find(
         (task) => task.id === draggableId
       );
+
       const newDestinationTasks = [...destinationColumn.tasks];
       newDestinationTasks.splice(destination.index, 0, draggedTask);
       const newSourceTasks = [...sourceColumn.tasks];
@@ -107,6 +115,7 @@ const Project = () => {
       dispatch(
         updateTaskSortRequest({
           board_data: JSON.stringify(new_tasks_id),
+          board_id,
         })
       );
     }
@@ -126,18 +135,53 @@ const Project = () => {
     setOpenTaskModal(false);
   };
 
+  const addEmptyBoard = () => {
+    setBoards((prevState) => [
+      ...prevState,
+      {
+        id: Date.now().toString(),
+        name: newBoardName,
+        tasks: [],
+      },
+    ]);
+    setNewBoardName("");
+
+    // dispatch(addBoardRequest({ board_id, newBoardName }));
+  };
+
+  const checkStatusBoardOnBlur = (boardId, boardName) => {
+    if (!boardName?.trim()) {
+      // Remove the board if the input is empty
+      setBoards((prevBoards) =>
+        prevBoards.filter((board) => board.id !== boardId)
+      );
+    }
+  };
+
   return (
     <div className={styles.Project}>
       <DragDropContext onDragEnd={onDragEnd}>
-        {boards.map((board, i) => (
+        {boards?.map((board, i) => (
           <RenderedItems key={i}>
             <div className={styles.BoardTitleParent}>
-              <h2 className={styles.Title}>
-                {board.name}{" "}
-                <span className={styles.SubTitle}>({board.tasks?.length})</span>
-              </h2>
+              {board.name ? (
+                <h2 className={styles.Title}>
+                  {board.name}{" "}
+                  <span className={styles.SubTitle}>
+                    ({board.tasks?.length})
+                  </span>
+                </h2>
+              ) : (
+                <input
+                  type="text"
+                  autoFocus
+                  value={newBoardName}
+                  onChange={(e) => setNewBoardName(e.target.value)}
+                  onBlur={() => checkStatusBoardOnBlur(board.id, newBoardName)}
+                />
+              )}
               <Link
-                to={"/AddTask"}
+                to={"/add-task"}
                 onClick={() => localStorage.setItem("status_id", board.id)}>
                 <AddTaskIcon style={{ color: "black", fontSize: 18 }} />
               </Link>
@@ -209,6 +253,9 @@ const Project = () => {
         ))}
       </DragDropContext>
       <TaskModal isOpen={openTaskModal} close={closeTaskModalFunc} />
+      <BlueButton disabled={null} onClick={addEmptyBoard}>
+        + Add board
+      </BlueButton>
     </div>
   );
 };

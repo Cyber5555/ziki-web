@@ -7,9 +7,19 @@
   position: relative;
 }
 
+.TitleParent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .Title {
   color: #3a3a3a;
   font-size: 20px;
+}
+
+.EditIcon {
+  cursor: pointer;
 }
 
 .Status {
