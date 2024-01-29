@@ -1,6 +1,12 @@
 import styles from "./blueButton.module.css";
 
-const BlueButton = ({ disabled, style, children, onClick, type }) => {
+const BlueButton = ({
+  disabled,
+  style,
+  children,
+  onClick,
+  type = "button",
+}) => {
   return (
     <button
       className={styles.Link}

@@ -6,7 +6,7 @@ export const NotFound = () => {
       <Player
         autoplay
         loop
-        src="https://assets7.lottiefiles.com/packages/lf20_cr9slsdh.json"
+        src="https://Assets7.lottiefiles.com/packages/lf20_cr9slsdh.json"
         style={{ height: "80vh", width: "100%" }}
         controls={false}>
         <Controls

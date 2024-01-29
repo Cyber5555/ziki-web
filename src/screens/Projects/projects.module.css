@@ -31,6 +31,13 @@
 .TaskInfo {
   color: #212529;
   font-size: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -moz-box;
+  display: -webkit-box;
+  -moz-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
 }
 
 .StartEndTimeWork {
@@ -70,13 +77,14 @@
   font-size: 8px;
   text-decoration-line: underline;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .CreatedUsersParent {
   display: flex;
   row-gap: 5px;
   flex-direction: column;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .CreatedUsers {

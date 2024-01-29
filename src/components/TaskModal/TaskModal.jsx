@@ -1,20 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./taskModal.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckBoxList from "./CheckBoxList";
-import { BlueButton } from "../buttons/blueButton/BlueButton";
 import Description from "./Description";
-import { BorderButton } from "../buttons/borderButton/BorderButton";
 import DOMPurify from "dompurify";
+import Galleries from "./Galleries";
+import { useSelector } from "react-redux";
+import { BorderButton } from "../buttons/borderButton/BorderButton";
+import { BlueButton } from "../buttons/blueButton/BlueButton";
+import { Tooltip } from "@mui/material";
 
 const TaskModal = ({ isOpen, close }) => {
-  const [isOpenChecklist, setIsOpenChecklist] = useState(false);
-  const [isOpenDescription, setIsOpenDescription] = useState(false);
+  const { task_data } = useSelector((state) => state.getTaskSlice);
   const [descriptionData, setDescriptionDate] = useState(null);
+  const [taskName, setTaskName] = useState("");
+  const [gallery, setGallery] = useState("Galleries");
+  const [isOpenSection, setIsOpenSection] = useState({
+    checklist: false,
+    galleries: false,
+    description: false,
+  });
 
   if (isOpen) {
     document.body.style.overflow = "hidden";
   }
+
+  const handleSectionToggle = (section) => {
+    setIsOpenSection((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
+  useEffect(() => {
+    setDescriptionDate(task_data?.description);
+    setTaskName(task_data?.name);
+    setIsOpenSection({
+      galleries: task_data?.galleries?.length > 0 ? true : false,
+    });
+  }, [task_data?.description, task_data?.galleries, task_data?.name]);
 
   return (
     <div
@@ -28,31 +52,18 @@ const TaskModal = ({ isOpen, close }) => {
         <div
           className={styles.TaskModalParent}
           onClick={(e) => e.stopPropagation()}>
-          <div className={styles.CoversParent}>
-            <span className={styles.ExitIsList} onClick={close}>
-              <CloseIcon htmlColor="black" />
-            </span>
-            <img
-              src={require("../../assets/images/projectLogo.png")}
-              alt=""
-              className={styles.CoversImage}
-            />
-            <BlueButton
-              style={{
-                position: "absolute",
-                bottom: 10,
-                right: 10,
-              }}>
-              Covers
-            </BlueButton>
-          </div>
+          <span className={styles.ExitIsList} onClick={close}>
+            <CloseIcon htmlColor="black" />
+          </span>
 
           <div className={styles.TaskModalWrapper}>
             <div className={styles.ComponentParent}>
-              <input value={"Header"} className={styles.InputElement} />
+              <Tooltip title={"For change project title click here"} arrow>
+                <input value={taskName} className={styles.InputElement} />
+              </Tooltip>
               <h3 className={styles.DescriptionTitle}>Description</h3>
 
-              {isOpenDescription ? (
+              {isOpenSection.description ? (
                 <div>
                   <Description
                     description={descriptionData}
@@ -60,14 +71,14 @@ const TaskModal = ({ isOpen, close }) => {
                   />
                   <div className={styles.DescriptionButtonsParent}>
                     <BlueButton
-                      onClick={() => setIsOpenDescription(false)}
+                      onClick={() => handleSectionToggle("description")}
                       style={{ position: "static" }}>
                       Save
                     </BlueButton>
                     <BorderButton
                       onClick={() => {
-                        setIsOpenDescription(false);
-                        setDescriptionDate(null);
+                        handleSectionToggle("description");
+                        setDescriptionDate(task_data?.description);
                       }}>
                       Cancel
                     </BorderButton>
@@ -75,7 +86,7 @@ const TaskModal = ({ isOpen, close }) => {
                 </div>
               ) : (
                 <button
-                  onClick={() => setIsOpenDescription(true)}
+                  onClick={() => handleSectionToggle("description")}
                   className={styles.AddDescription}>
                   {descriptionData ? (
                     <div
@@ -108,35 +119,47 @@ const TaskModal = ({ isOpen, close }) => {
                   )}
                 </button>
               )}
-              {isOpenChecklist && (
+              {isOpenSection.checklist && (
                 <input
                   className={styles.CheckListTitle}
                   defaultValue={"Check List"}
                 />
               )}
-              {isOpenChecklist && <CheckBoxList />}
+              {isOpenSection.checklist && <CheckBoxList />}
+
+              {isOpenSection.galleries && (
+                <Tooltip title={`For change ${gallery} title click here`} arrow>
+                  <input
+                    className={styles.CheckListTitle}
+                    value={gallery}
+                    onChange={(e) => setGallery(e.target.value)}
+                  />
+                </Tooltip>
+              )}
+              {isOpenSection.galleries && (
+                <Galleries galleries={task_data?.galleries} />
+              )}
             </div>
             <div className={styles.RightBar}>
-              <label
-                htmlFor="checklist"
-                className={styles.CheckBoxListOpen}
-                onChange={(e) => {
-                  e.stopPropagation();
-                  // e.preventDefault();
-                  setIsOpenChecklist(!isOpenChecklist);
-                }}>
+              <label htmlFor="checklist" className={styles.CheckBoxListOpen}>
                 <input
                   type="checkbox"
-                  checked={isOpenChecklist}
+                  checked={isOpenSection.checklist}
                   className={styles.CheckBox}
                   id="checklist"
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    // e.preventDefault();
-                    setIsOpenChecklist(!isOpenChecklist);
-                  }}
+                  onChange={() => handleSectionToggle("checklist")}
                 />
                 Check list
+              </label>
+              <label htmlFor="galleries" className={styles.CheckBoxListOpen}>
+                <input
+                  type="checkbox"
+                  checked={isOpenSection.galleries}
+                  className={styles.CheckBox}
+                  id="galleries"
+                  onChange={() => handleSectionToggle("galleries")}
+                />
+                Galleries
               </label>
             </div>
           </div>

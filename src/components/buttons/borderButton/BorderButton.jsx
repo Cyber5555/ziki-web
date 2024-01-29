@@ -1,11 +1,23 @@
 import React from "react";
 import styles from "./borderButton.module.css";
-import { Link } from "react-router-dom";
 
-export const BorderButton = ({ to, children, onClick }) => {
+const BorderButton = ({
+  children,
+  onClick,
+  style,
+  type = "button",
+  disabled,
+}) => {
   return (
-    <Link to={to} className={styles.Link} onClick={onClick}>
+    <button
+      className={styles.Link}
+      onClick={onClick}
+      style={style}
+      type={type}
+      disabled={disabled}>
       {children}
-    </Link>
+    </button>
   );
 };
+
+export { BorderButton };

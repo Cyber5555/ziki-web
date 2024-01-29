@@ -13,6 +13,7 @@ const Input = ({
   changeShowPassword,
   password,
   errorMessage,
+  name,
 }) => {
   return (
     <div className={styles.InputParent}>
@@ -25,7 +26,7 @@ const Input = ({
         onChange={onChange}
         error={error}
         type={type}
-        
+        name={name}
       />
       {password && (
         <div className={styles.ShowPassword} onClick={changeShowPassword}>

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import NavbarAvatar from "../../assets/images/NavbarAvatar.png";
-import NotifyIcon from "../../assets/icons/notifyIcon.svg";
-import SettingsIcon from "../../assets/icons/settingsIcon.svg";
+import NavbarAvatar from "../../Assets/images/NavbarAvatar.png";
+import { ReactComponent as NotifyIcon } from "../../Assets/icons/notifyIcon.svg";
+import { ReactComponent as SettingsIcon } from "../../Assets/icons/settingsIcon.svg";
 import styles from "./navbar.module.css";
-import SideBarIcon from "../../assets/icons/SideBarIcon.svg";
+import { ReactComponent as SideBarIcon } from "../../Assets/icons/SideBarIcon.svg";
 import { useLocation } from "react-router-dom";
 import { NotificationsDropdown } from "../NotificationsDropdown/NotificationsDropdown";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,8 +40,7 @@ export const Navbar = () => {
   return (
     <nav className={styles.Navbar}>
       <div className={styles.LeftSide}>
-        <img
-          src={SideBarIcon}
+        <SideBarIcon
           alt="Side Bar Icon"
           onClick={toggleMenuBar}
           style={{ cursor: "pointer" }}
@@ -52,9 +51,7 @@ export const Navbar = () => {
         {/*search*/}
         <input type="text" className={styles.Search} />
 
-        <img
-          src={NotifyIcon}
-          alt={"Notification Icon"}
+        <NotifyIcon
           style={{ cursor: "pointer" }}
           onClick={() => setIsOpen(!isOpen)}
         />
@@ -63,11 +60,7 @@ export const Navbar = () => {
           alt={"Navbar Avatar"}
           className={styles.Avatar}
         />
-        <img
-          src={SettingsIcon}
-          alt={"Settings Icon"}
-          style={{ cursor: "pointer" }}
-        />
+        <SettingsIcon alt={"Settings Icon"} style={{ cursor: "pointer" }} />
 
         <NotificationsDropdown isOpen={isOpen} />
       </div>

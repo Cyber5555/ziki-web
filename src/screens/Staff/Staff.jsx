@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./staff.module.css";
-import { RenderedItems } from "../../components/RenderedItems/RenderedItems";
-import { BlueButton } from "../../components/buttons/blueButton/BlueButton";
+import { RenderedItems } from "../../Components/RenderedItems/RenderedItems";
+import { BlueButton } from "../../Components/buttons/blueButton/BlueButton";
 import { useNavigate } from "react-router-dom";
 
 const data = ["Back - end", "Front - end"];

@@ -1,13 +1,13 @@
 /* eslint-disable array-callback-return */
-import { RenderedItems } from "../../components/RenderedItems/RenderedItems.jsx";
+import { RenderedItems } from "../../Components/RenderedItems/RenderedItems.jsx";
 import styles from "./projects.module.css";
-import { BlueButton } from "../../components/buttons/blueButton/BlueButton.jsx";
-import { Link, useNavigate } from "react-router-dom";
+import { BlueButton } from "../../Components/buttons/blueButton/BlueButton.jsx";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProjectsRequest } from "../../store/authUsersReducer/getAllProjectsSlice.tsx";
 import { pusher } from "../../pusher.js";
-import { ReactComponent as EditIcon } from "../../assets/icons/editIcon.svg";
+import { ReactComponent as EditIcon } from "../../Assets/icons/editIcon.svg";
 
 export const Projects = () => {
   const dispatch = useDispatch();
@@ -40,7 +40,7 @@ export const Projects = () => {
           <div className={styles.TitleParent}>
             <h2 className={styles.Title}>{board?.name}</h2>
             <EditIcon
-              onClick={() => navigate("/edit-project")}
+              onClick={() => navigate(`/edit-project/${board.id}`)}
               className={styles.EditIcon}
             />
           </div>
@@ -62,6 +62,7 @@ export const Projects = () => {
               View all sprints (
               {board.statuses.reduce((acc, obj) => acc + obj.count, 0)})
             </p>
+            <div style={{ clear: "both" }} />
             <div className={styles.CreatedUsersParent}>
               {board?.users?.map((user, userIndex) => (
                 <div className={styles.CreatedUsers} key={userIndex}>

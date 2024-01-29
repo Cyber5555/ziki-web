@@ -1,9 +1,9 @@
 import React from "react";
-import Ziki from "../../assets/icons/ziki.svg";
-import robot_eset from "../../assets/images/robot-eset.png";
+import { ReactComponent as Ziki } from "../../Assets/icons/ziki.svg";
+import robot_eset from "../../Assets/images/robot-eset.png";
 import styles from "./aside.module.css";
-import ArrowRight from "../../assets/icons/arrowRight.svg";
-import { Link, NavLink } from "react-router-dom";
+import { ReactComponent as ArrowRight } from "../../Assets/icons/arrowRight.svg";
+import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
@@ -18,7 +18,7 @@ export const Aside = () => {
     <aside className={styles.Aside}>
       <div className={styles.SideBarHeader}>
         <img src={robot_eset} className={styles.RobotEset} alt="robot_eset" />
-        <img src={Ziki} alt={"Ziki"} />
+        <Ziki />
       </div>
 
       <ul className={styles.SideBarUl}>
@@ -34,7 +34,7 @@ export const Aside = () => {
             <PeopleRoundedIcon />
             Staff
           </span>
-          <img src={ArrowRight} alt={"ArrowRight"} />
+          <ArrowRight />
         </NavLink>
 
         <NavLink
@@ -49,7 +49,7 @@ export const Aside = () => {
             <AccountTreeRoundedIcon />
             Project
           </span>
-          <img src={ArrowRight} alt={"ArrowRight"} />
+          <ArrowRight />
         </NavLink>
 
         <NavLink
@@ -64,7 +64,7 @@ export const Aside = () => {
             <CalendarMonthRoundedIcon />
             Calendar
           </span>
-          <img src={ArrowRight} alt={"ArrowRight"} />
+          <ArrowRight />
         </NavLink>
 
         <NavLink
@@ -79,7 +79,7 @@ export const Aside = () => {
             <MessageRoundedIcon />
             Chat
           </span>
-          <img src={ArrowRight} alt={"ArrowRight"} />
+          <ArrowRight />
         </NavLink>
 
         <NavLink
@@ -94,7 +94,7 @@ export const Aside = () => {
             <SettingsSuggestRoundedIcon />
             Settings
           </span>
-          <img src={ArrowRight} alt={"ArrowRight"} />
+          <ArrowRight />
         </NavLink>
       </ul>
     </aside>

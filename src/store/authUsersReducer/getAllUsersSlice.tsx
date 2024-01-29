@@ -1,5 +1,5 @@
 import { Http } from "../../http";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface UserData {
   success: boolean;

@@ -12,6 +12,7 @@
   align-items: center;
   gap: 30px;
   height: 40px;
+  width: fit-content;
 }
 
 .FileInput {

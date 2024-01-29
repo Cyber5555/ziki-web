@@ -1,6 +1,6 @@
 import React from 'react'
-import { BigRenderer } from '../../components/BigRenderer/BigRenderer'
-import { BlueButton } from '../../components/buttons/blueButton/BlueButton'
+import { BigRenderer } from '../../Components/BigRenderer/BigRenderer'
+import { BlueButton } from '../../Components/buttons/blueButton/BlueButton'
 import styles from './addStaff.module.css'
 
 export const AddStaff = () => {

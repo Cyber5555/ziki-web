@@ -1,26 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { RenderedItems } from "../../components/RenderedItems/RenderedItems";
 import styles from "./project.module.css";
+import React, { useEffect, useState } from "react";
+import { RenderedItems } from "../../Components/RenderedItems/RenderedItems";
 import { getProjectColumnRequest } from "../../store/authUsersReducer/getProjectColumnSlice.tsx";
-import FlagMark from "../../assets/icons/flagMark.svg";
+import { ReactComponent as FlagMark } from "../../Assets/icons/flagMark.svg";
 import { useDispatch } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { updateTaskSortRequest } from "../../store/authUsersReducer/updateTaskSortSlice.tsx";
 import { pusher } from "../../pusher";
-import AddTaskIcon from "@mui/icons-material/AddTask";
-import { Link, useParams } from "react-router-dom";
-import TaskModal from "../../components/TaskModal/TaskModal";
+import { useNavigate, useParams } from "react-router-dom";
+import TaskModal from "../../Components/TaskModal/TaskModal";
 import { changeTitle } from "../../store/otherSlice/pageTitleSlice.tsx";
-import { BlueButton } from "../../components/buttons/blueButton/BlueButton.jsx";
+import { BlueButton } from "../../Components/buttons/blueButton/BlueButton.jsx";
 import { addBoardRequest } from "../../store/authUsersReducer/addBoardSlice.tsx";
+import { getTaskRequest } from "../../store/authUsersReducer/getTaskSlice.tsx";
+import { Tooltip } from "@mui/material";
+import {
+  AddTask as AddTaskIcon,
+  DeleteOutline as DeleteOutlineIcon,
+} from "@mui/icons-material";
+import { removeBoardRequest } from "../../store/authUsersReducer/removeBoardSlice.tsx";
+import { useSelector } from "react-redux";
 
 const Project = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [boards, setBoards] = useState([]);
   const [full_data, setFullData] = useState([]);
   const [openTaskModal, setOpenTaskModal] = useState(false);
   const [newBoardName, setNewBoardName] = useState("");
   const { board_id } = useParams();
+  const { removedStatus } = useSelector((state) => state.removeBoardSlice);
 
   const channel = pusher.subscribe("project-list");
   channel.bind("task.sort-updated", function (data) {
@@ -28,6 +37,7 @@ const Project = () => {
       setBoards(res.payload?.payload?.statuses);
       setFullData(res.payload?.payload);
       channel.unbind("task.sort-updated");
+      channel.unbind_all();
     });
     return data;
   });
@@ -37,8 +47,8 @@ const Project = () => {
       setBoards(res.payload?.payload?.statuses);
       setFullData(res.payload?.payload);
     });
-    dispatch(changeTitle({ title: full_data.name }));
-  }, [dispatch, board_id, full_data.name]);
+    dispatch(changeTitle({ title: full_data?.name }));
+  }, [dispatch, board_id, full_data?.name]);
 
   function onDragEnd(result) {
     const { draggableId, source, destination } = result;
@@ -127,7 +137,8 @@ const Project = () => {
     paddingBottom: 10,
   });
 
-  const openTaskModalFunc = () => {
+  const openTaskModalFunc = (item) => {
+    dispatch(getTaskRequest(item.id));
     setOpenTaskModal(true);
   };
 
@@ -145,8 +156,10 @@ const Project = () => {
       },
     ]);
     setNewBoardName("");
+  };
 
-    // dispatch(addBoardRequest({ board_id, newBoardName }));
+  const saveNewBoard = () => {
+    dispatch(addBoardRequest({ board_id, newBoardName }));
   };
 
   const checkStatusBoardOnBlur = (boardId, boardName) => {
@@ -158,6 +171,15 @@ const Project = () => {
     }
   };
 
+  const removeBoard = (boardId) => {
+    dispatch(removeBoardRequest(boardId)).then((result) => {
+      console.log(result);
+    });
+    setBoards((prevBoards) =>
+      prevBoards.filter((board) => board.id !== boardId)
+    );
+  };
+
   return (
     <div className={styles.Project}>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -165,26 +187,58 @@ const Project = () => {
           <RenderedItems key={i}>
             <div className={styles.BoardTitleParent}>
               {board.name ? (
-                <h2 className={styles.Title}>
-                  {board.name}{" "}
-                  <span className={styles.SubTitle}>
-                    ({board.tasks?.length})
-                  </span>
-                </h2>
+                <>
+                  <h2 className={styles.Title}>
+                    {board.name}{" "}
+                    <span className={styles.SubTitle}>
+                      ({board.tasks?.length})
+                    </span>
+                  </h2>
+                  <div className={styles.RightSideIcons}>
+                    <Tooltip title="Delete Board" arrow>
+                      <DeleteOutlineIcon
+                        style={{
+                          cursor: "pointer",
+                          color: "red",
+                          fontSize: 20,
+                        }}
+                        onClick={() => removeBoard(board.id)}
+                      />
+                    </Tooltip>
+                    <Tooltip title="Add new task" arrow>
+                      <AddTaskIcon
+                        style={{
+                          color: "black",
+                          fontSize: 18,
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          navigate(`/add-task/${board_id}`);
+                          localStorage.setItem("status_id", board.id);
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
+                </>
               ) : (
-                <input
-                  type="text"
-                  autoFocus
-                  value={newBoardName}
-                  onChange={(e) => setNewBoardName(e.target.value)}
-                  onBlur={() => checkStatusBoardOnBlur(board.id, newBoardName)}
-                />
+                <div className={styles.InputParent}>
+                  <input
+                    type="text"
+                    autoFocus
+                    value={newBoardName}
+                    onChange={(e) => setNewBoardName(e.target.value)}
+                    className={styles.BoardInput}
+                    onBlur={() =>
+                      checkStatusBoardOnBlur(board.id, newBoardName)
+                    }
+                  />
+                  <BlueButton
+                    style={{ position: "static", marginTop: 10 }}
+                    onClick={saveNewBoard}>
+                    Save
+                  </BlueButton>
+                </div>
               )}
-              <Link
-                to={"/add-task"}
-                onClick={() => localStorage.setItem("status_id", board.id)}>
-                <AddTaskIcon style={{ color: "black", fontSize: 18 }} />
-              </Link>
             </div>
             <div className={styles.Line}></div>
 
@@ -206,12 +260,13 @@ const Project = () => {
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
                           className={styles.Tasks}
-                          onClick={openTaskModalFunc}>
+                          onClick={() => openTaskModalFunc(item)}>
                           <div className={styles.TaskName}>
                             <p>{item.name}</p>
-                            <img src={FlagMark} alt="FlagMark" />
+                            <FlagMark />
                           </div>
-                          <h3 className={styles.Complates}>Complate </h3>
+                          <h3 className={styles.Completes}>Complete </h3>
+                          {console.log(item)}
                           <div className={styles.CreatedUsersParent}>
                             {item.users.map((user, $$) => (
                               <div className={styles.CreatedUsers} key={$$}>

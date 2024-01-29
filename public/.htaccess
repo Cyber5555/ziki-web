@@ -1,9 +1,16 @@
 <IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase /subdirectory
-RewriteRule ^index\.html$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-l
-RewriteRule . /index.html [L]
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-l
+  RewriteRule . /index.html [L]
+  RewriteCond %{HTTP_HOST} ^www\.dev.ziki\.am$ [NC]
+  RewriteRule ^(.*)$ https://dev.ziki.am/$1 [L,R=301]
+
+  # Redirects
+  Redirect 301 /hy https://dev.ziki.am
+  Redirect 301 /home https://dev.ziki.am
+
 </IfModule>

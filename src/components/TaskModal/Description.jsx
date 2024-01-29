@@ -9,14 +9,14 @@ const Description = ({ description, setDescription }) => {
     const content = editorRef.current.getContent();
     setDescription(content);
   };
-  console.log(description, "description");
+
   return (
     <div className={styles.DescriptionParent}>
       <Editor
         apiKey="6g9gmh0sl4t00q0elcc5x44dz2jcrnr3ccpc31g7n583mywe"
         onInit={(evt, editor) => (editorRef.current = editor)}
         initialValue={
-          description === "" || description != null || description !== undefined
+          description !== "" || description != null || description !== undefined
             ? description
             : "<p></p>"
         }

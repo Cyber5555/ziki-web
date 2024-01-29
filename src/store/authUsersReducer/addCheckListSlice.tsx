@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Http } from "../../http";
 
-interface AddTaskData {
+interface AddCheckListData {
   name: string;
   board_id: string;
   description: string;
@@ -12,38 +12,24 @@ interface AddTaskData {
   user_ids: string[];
 }
 
-interface AddTaskState {
+interface AddCheckListState {
   isLoading: boolean;
 }
 
 export const addTaskRequest = createAsyncThunk(
   "add_task",
-  async (data: AddTaskData, { rejectWithValue }) => {
+  async (data: AddCheckListData, { rejectWithValue }) => {
     const token = localStorage.getItem("userToken");
 
     let headers = {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
     };
-    let form_data = new FormData();
-    form_data.append("name", data.name);
-    form_data.append("project_id", data.board_id);
-    form_data.append("description", data.description);
-    form_data.append("status_id", data.status_id);
-    form_data.append("start_date", data.start_date);
-    form_data.append("end_date", data.end_date);
-    Object.values(data.image).map((value) =>
-      form_data.append("images[]", value)
-    );
-    Object.values(data.user_ids).map((value) =>
-      form_data.append("user_ids[]", value)
-    );
 
     try {
       let response = await Http.post(
-        `${process.env.REACT_APP_API_URL}api/store/task`,
-        headers,
-        form_data
+        `${process.env.REACT_APP_API_URL}api/store/checklist`,
+        headers
       );
 
       return response.data;
@@ -57,7 +43,7 @@ const addTaskSlice = createSlice({
   name: "add_task",
   initialState: {
     isLoading: false,
-  } as AddTaskState,
+  } as AddCheckListState,
 
   reducers: {},
 

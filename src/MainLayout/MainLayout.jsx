@@ -1,19 +1,19 @@
 import React from "react";
-import { Navbar } from "../components/navbar/Navbar";
-import { Aside } from "../components/Aside/Aside";
+import { Navbar } from "../Components/navbar/Navbar";
+import { Aside } from "../Components/Aside/Aside";
 import styles from "./mainLayout.module.css";
 import { Route, Routes } from "react-router-dom";
-import { Projects } from "../screens/Projects/Projects";
-import { AddProject } from "../screens/AddProject/AddProject";
-import { EditProject } from "../screens/EditProject/EditProject";
-import { Staff } from "../screens/Staff/Staff";
-import { AddStaff } from "../screens/AddStaff/AddStaff";
-import { AddTask } from "../screens/AddTask/AddTask";
-
-import { LoginPage } from "../screens/LoginScreen/LoginPage";
-import Project from "../screens/Project/Project";
+import { Projects } from "../Screens/Projects/Projects";
+import { AddProject } from "../Screens/AddProject/AddProject";
+import { EditProject } from "../Screens/EditProject/EditProject";
+import { Staff } from "../Screens/Staff/Staff";
+import { AddStaff } from "../Screens/AddStaff/AddStaff";
+import { AddTask } from "../Screens/AddTask/AddTask";
+import { LoginPage } from "../Screens/Login/LoginPage";
+import Project from "../Screens/Project/Project";
 import { useSelector } from "react-redux";
-import { NotFound } from "../screens/NotFound";
+import { NotFound } from "../Screens/NotFound";
+import Register from "../Screens/Register/Register";
 
 export const MainLayout = () => {
   const { isOpenAside } = useSelector((state) => state.openAsideSlice);
@@ -23,6 +23,8 @@ export const MainLayout = () => {
       {!localStorage.getItem("userToken") ? (
         <Routes>
           <Route exact="true" path="/" Component={LoginPage} />
+          <Route exact="true" path="/register" Component={Register} />
+          <Route path="*" Component={NotFound} />
         </Routes>
       ) : (
         <React.Fragment>
@@ -35,10 +37,13 @@ export const MainLayout = () => {
                   <Route exace index Component={Projects} />
                   <Route path="/project/:board_id" Component={Project} />
                   <Route path="/add-project" Component={AddProject} />
-                  <Route path="/edit-project" Component={EditProject} />
+                  <Route
+                    path="/edit-project/:project_id"
+                    Component={EditProject}
+                  />
                   <Route path="/staff" Component={Staff} />
                   <Route path="/add-staff" Component={AddStaff} />
-                  <Route path="/add-task" Component={AddTask} />
+                  <Route path="/add-task/:board_id" Component={AddTask} />
                 </Route>
                 <Route path="*" Component={NotFound} />
               </Routes>

@@ -1,13 +1,13 @@
 import React from "react";
-import styles from "./loginScreen.module.css";
+import styles from "./login.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import Input from "../../components/inputs/input";
+import Input from "../../Components/inputs/input.jsx";
 import {
   clearErrorLogin,
   loginRequest,
 } from "../../store/authSystemReducer/loginSlice.tsx";
 import { ClipLoader } from "react-spinners";
-import { Button } from "@mui/material";
+import { BlueButton } from "../../Components/buttons/blueButton/BlueButton.jsx";
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
@@ -32,9 +32,9 @@ export const LoginPage = () => {
     if (password.trim().length > 0 && email.trim().length > 0) {
       dispatch(loginRequest({ email, password }));
     } else if (email.trim().length === 0) {
-      setErrorMessage("partadir email");
+      setErrorMessage("required email");
     } else if (password.trim().length === 0) {
-      setErrorMessage("partadir password");
+      setErrorMessage("required password");
     }
   };
 
@@ -81,13 +81,13 @@ export const LoginPage = () => {
           />
           <label htmlFor="remember_me">Remember Me</label>
         </div>
-        <Button type="submit" variant="contained" style={{ width: 100 }}>
+        <BlueButton type="submit" style={{ width: 100, position: "static" }}>
           {isLoading ? (
             <ClipLoader loading={isLoading} size={20} color="white" />
           ) : (
             "Sign In"
           )}
-        </Button>
+        </BlueButton>
         {<p className={styles.ErrorMessage}>{errorMessage}</p>}
       </form>
     </div>
