@@ -1,0 +1,46 @@
+.PersonalPage {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  padding: 20px;
+}
+
+.TopPersonData {
+  display: flex;
+  gap: 30px;
+}
+
+.AvatarParent {
+  position: relative;
+}
+
+.UserWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.CompanyDataParent {
+  margin-top: 20px;
+}
+
+.CompanyDataWrapper {
+  display: flex;
+  gap: 30px;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.Inputs {
+  width: 300px;
+  height: 40px;
+  outline: none;
+  padding: 0 10px;
+  border-radius: 5px;
+  border: none;
+  border: 1px solid rgba(0, 0, 0, 0.212);
+}
+
+.Inputs:focus {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.47);
+}

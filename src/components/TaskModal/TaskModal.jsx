@@ -9,8 +9,11 @@ import { useSelector } from "react-redux";
 import { BorderButton } from "../buttons/borderButton/BorderButton";
 import { BlueButton } from "../buttons/blueButton/BlueButton";
 import { Tooltip } from "@mui/material";
+import { updateTaskRequest } from "../../store/authUsersReducer/updateTaskSlice.tsx";
+import { useDispatch } from "react-redux";
 
 const TaskModal = ({ isOpen, close }) => {
+  const dispatch = useDispatch();
   const { task_data } = useSelector((state) => state.getTaskSlice);
   const [descriptionData, setDescriptionDate] = useState(null);
   const [taskName, setTaskName] = useState("");
@@ -59,7 +62,11 @@ const TaskModal = ({ isOpen, close }) => {
           <div className={styles.TaskModalWrapper}>
             <div className={styles.ComponentParent}>
               <Tooltip title={"For change project title click here"} arrow>
-                <input value={taskName} className={styles.InputElement} />
+                <input
+                  value={taskName}
+                  className={styles.InputElement}
+                  onChange={(e) => setTaskName(e.target.value)}
+                />
               </Tooltip>
               <h3 className={styles.DescriptionTitle}>Description</h3>
 
@@ -71,7 +78,16 @@ const TaskModal = ({ isOpen, close }) => {
                   />
                   <div className={styles.DescriptionButtonsParent}>
                     <BlueButton
-                      onClick={() => handleSectionToggle("description")}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        dispatch(
+                          updateTaskRequest({
+                            status_id: task_data.status_id,
+                            description: descriptionData,
+                          })
+                        );
+                        // handleSectionToggle("description");
+                      }}
                       style={{ position: "static" }}>
                       Save
                     </BlueButton>
@@ -122,7 +138,8 @@ const TaskModal = ({ isOpen, close }) => {
               {isOpenSection.checklist && (
                 <input
                   className={styles.CheckListTitle}
-                  defaultValue={"Check List"}
+                  value={"Check List"}
+                  onChange={null}
                 />
               )}
               {isOpenSection.checklist && <CheckBoxList />}

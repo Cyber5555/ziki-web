@@ -50,7 +50,6 @@ const getTaskSlice = createSlice({
       .addCase(
         getTaskRequest.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log("📢 [getTaskSlice.tsx:53]", action.payload);
           if (action.payload?.success) {
             state.task_data = action.payload.payload;
           }

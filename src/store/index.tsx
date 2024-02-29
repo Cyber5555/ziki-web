@@ -1,9 +1,7 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import getAllProjectsSlice from "./authUsersReducer/getAllProjectsSlice.tsx";
 import addProjectSlice from "./authUsersReducer/addProjectSlice.tsx";
 import addUserInProjectSlice from "./otherSlice/addUserInProjectSlice.tsx";
-import getAllUsersSlice from "./authUsersReducer/getAllUsersSlice.tsx";
-import getProjectColumnSlice from "./authUsersReducer/getProjectColumnSlice.tsx";
 import authUserDetailSlice from "./authUsersReducer/authUserDetailSlice.tsx";
 import updateTaskSortSlice from "./authUsersReducer/updateTaskSortSlice.tsx";
 import openAsideSlice from "./otherSlice/openAsideSlice.tsx";
@@ -16,14 +14,18 @@ import editProjectSlice from "./authUsersReducer/editProjectSlice.tsx";
 import getTaskSlice from "./authUsersReducer/getTaskSlice.tsx";
 import removeBoardSlice from "./authUsersReducer/removeBoardSlice.tsx";
 import registerSlice from "./authSystemReducer/registerSlice.tsx";
+import createCompanySlice from "./authSystemReducer/createCompanySlice.tsx";
+import registerUserSlice from "./authSystemReducer/registerUserSlice.tsx";
+import staffListSlice from "./authUsersReducer/staffListSlice.tsx";
+import inviteUserSlice from "./authUsersReducer/inviteUserSlice.tsx";
+import organizationDetailsSlice from "./authUsersReducer/organizationDetailsSlice.tsx";
+import updatePasswordSlice from "./authUsersReducer/updatePasswordSlice.tsx";
 
 const rootReducer = combineReducers({
   loginSlice,
   getAllProjectsSlice,
   addProjectSlice,
   addUserInProjectSlice,
-  getAllUsersSlice,
-  getProjectColumnSlice,
   authUserDetailSlice,
   updateTaskSortSlice,
   addTaskSlice,
@@ -35,6 +37,12 @@ const rootReducer = combineReducers({
   getTaskSlice,
   removeBoardSlice,
   registerSlice,
+  createCompanySlice,
+  registerUserSlice,
+  staffListSlice,
+  inviteUserSlice,
+  organizationDetailsSlice,
+  updatePasswordSlice,
 });
 
 export const store = configureStore({

@@ -6,16 +6,19 @@ const BlueButton = ({
   children,
   onClick,
   type = "button",
+  role = true,
 }) => {
   return (
-    <button
-      className={styles.Link}
-      type={type}
-      style={style}
-      onClick={onClick}
-      disabled={disabled}>
-      {children}
-    </button>
+    role === true && (
+      <button
+        className={styles.Link}
+        type={type}
+        style={style}
+        onClick={onClick}
+        disabled={disabled}>
+        {children}
+      </button>
+    )
   );
 };
 

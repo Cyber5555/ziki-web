@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Http } from "../../http";
 
-interface AddTaskData {
+interface UpdateTaskData {
+  task_id: string;
   name: string;
   project_id: string;
   description: string;
@@ -12,62 +13,56 @@ interface AddTaskData {
   user_ids: string[];
 }
 
-interface AddTaskState {
+interface UpdateTaskState {
   isLoading: boolean;
 }
 
-export const addTaskRequest = createAsyncThunk(
-  "add_task",
-  async (data: AddTaskData, { rejectWithValue }) => {
+export const updateTaskRequest = createAsyncThunk(
+  "update_task",
+  async (data: UpdateTaskData, { rejectWithValue }) => {
     const token = localStorage.getItem("userToken");
 
     let headers = {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
     };
-    let form_data = new FormData();
+    var form_data = new FormData();
+    form_data.append("_method", "PUT");
     form_data.append("name", data.name);
-    form_data.append("project_id", data.project_id);
-    form_data.append("description", data.description);
     form_data.append("status_id", data.status_id);
-    form_data.append("start_date", data.start_date);
-    form_data.append("end_date", data.end_date);
-    Object.values(data.image).map((value) =>
-      form_data.append("images[]", value)
-    );
-    Object.values(data.user_ids).map((value) =>
-      form_data.append("user_ids[]", value)
-    );
+    form_data.append("description", data.description);
+    form_data.append("user_ids[]", "");
 
     try {
       let response = await Http.post(
-        `${process.env.REACT_APP_API_URL}api/store/task`,
+        `${process.env.REACT_APP_API_URL}api/update/task/${data.status_id}`,
         headers,
         form_data
       );
 
-      return response.data;
+      return response?.data;
     } catch (error) {
+      console.error("Error updating task:", error);
       return rejectWithValue(error.response);
     }
   }
 );
 
-const addTaskSlice = createSlice({
-  name: "add_task",
+const updateTaskSlice = createSlice({
+  name: "update_task",
   initialState: {
     isLoading: false,
-  } as AddTaskState,
+  } as UpdateTaskState,
 
   reducers: {},
 
   extraReducers: (builder) => {
     builder
-      .addCase(addTaskRequest.pending, (state) => {
+      .addCase(updateTaskRequest.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(
-        addTaskRequest.fulfilled,
+        updateTaskRequest.fulfilled,
         (state, action: PayloadAction<any>) => {
           // if (action.payload?.success) {
 
@@ -76,10 +71,10 @@ const addTaskSlice = createSlice({
           state.isLoading = false;
         }
       )
-      .addCase(addTaskRequest.rejected, (state) => {
+      .addCase(updateTaskRequest.rejected, (state) => {
         state.isLoading = false;
       });
   },
 });
 
-export default addTaskSlice.reducer;
+export default updateTaskSlice.reducer;

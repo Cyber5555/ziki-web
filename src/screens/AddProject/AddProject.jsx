@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "./addProject.module.css";
 import { BigRenderer } from "../../Components/BigRenderer/BigRenderer";
-import { BorderButton } from "../../Components/buttons/borderButton/BorderButton";
 import { BlueButton } from "../../Components/buttons/blueButton/BlueButton";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -12,15 +11,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { addProjectRequest } from "../../store/authUsersReducer/addProjectSlice.tsx";
 import FileInput from "../../Components/fileInput/fileInput.tsx";
 import { ClipLoader } from "react-spinners";
-import { getAllUsersRequest } from "../../store/authUsersReducer/getAllUsersSlice.tsx";
 import UserList from "../../Components/UserList/UserList";
 import { useNavigate } from "react-router-dom";
+import { staffListRequest } from "../../store/authUsersReducer/staffListSlice.tsx";
 
 export const AddProject = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [projectLogo, setProjectLogo] = useState({});
-  const [projectTz, setProjectTz] = useState({});
+  const [projectLogo, setProjectLogo] = useState(null);
+  const [projectTz, setProjectTz] = useState(null);
   const [openUserList, setOpenUserList] = useState(false);
   const [startDate, setStartDate] = useState(moment(new Date()));
   const [endDate, setEndDate] = useState(null);
@@ -32,18 +31,16 @@ export const AddProject = () => {
   const { isLoading, errorMessages } = useSelector(
     (state) => state.addProjectSlice
   );
-  const { all_users } = useSelector((state) => state.getAllUsersSlice);
+  const { staff_data } = useSelector((state) => state.staffListSlice);
 
   const { selectedUsers } = useSelector((state) => state.addUserInProjectSlice);
 
   const openModal = () => {
     setOpenUserList(true);
-    dispatch(getAllUsersRequest({}));
+    dispatch(staffListRequest());
   };
 
-  const closeModal = () => {
-    setOpenUserList(false);
-  };
+  const closeModal = () => setOpenUserList(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -85,6 +82,7 @@ export const AddProject = () => {
                     format="YYYY-MM-DD"
                     onChange={(e) => setStartDate(e)}
                     value={startDate}
+                    minDate={moment(new Date())}
                   />
                 </DemoItem>
                 <p className={styles.ErrorMessage}>
@@ -99,6 +97,7 @@ export const AddProject = () => {
                     format="YYYY-MM-DD"
                     onChange={(e) => setEndDate(e)}
                     value={endDate}
+                    minDate={moment(new Date())}
                   />
                 </DemoItem>
                 <p className={styles.ErrorMessage}>
@@ -112,7 +111,6 @@ export const AddProject = () => {
               type="text"
               name="projectName"
               onChange={handleChange}
-              // onBlur={handleBlur}
               className={styles.ProjectTitle}
               placeholder={"Projects name"}
               value={formData.projectName}
@@ -140,7 +138,7 @@ export const AddProject = () => {
                   setProjectLogo(e.target.files[0]);
                 }}
                 onRemove={() => {
-                  setProjectLogo({});
+                  setProjectLogo(null);
                 }}>
                 {projectLogo?.name ? projectLogo?.name : "+ Add project logo"}
               </FileInput>
@@ -149,12 +147,12 @@ export const AddProject = () => {
                   setProjectTz(e.target.files[0]);
                 }}
                 onRemove={() => {
-                  setProjectTz({});
+                  setProjectTz(null);
                 }}>
                 {projectTz?.name ? projectTz?.name : "+ Add project tz"}
               </FileInput>
-              <BorderButton>+ Add project design</BorderButton>
-              <BorderButton>+ Add project logoStatus project</BorderButton>
+              {/* <BorderButton>+ Add project design</BorderButton>
+              <BorderButton>+ Add project logoStatus project</BorderButton> */}
             </div>
             <BlueButton
               style={{ position: "static", marginTop: 12 }}
@@ -182,24 +180,38 @@ export const AddProject = () => {
             <div className={styles.UsersParent}>
               <h2 className={styles.UsersTitle}>Users</h2>
             </div>
-            {all_users?.map(
-              (user, index) =>
-                selectedUsers.includes(user.id) && (
-                  <div className={styles.CreatedUsers} key={index}>
-                    <p className={styles.UserNameFirstLatterOrImage}>
-                      {user?.name && user?.name[0]}
-                      {user?.name && user?.name?.split(" ")[1][0]}
-                    </p>
-                    <div>
-                      <p className={styles.UserNameAndDeveloperType}>
-                        {user.name}
+
+            {staff_data.length > 0 ? (
+              staff_data?.map(
+                (user, index) =>
+                  selectedUsers.includes(user.id) && (
+                    <div className={styles.CreatedUsers} key={index}>
+                      <p className={styles.UserNameFirstLatterOrImage}>
+                        {user.avatar ? (
+                          <img
+                            src={user.avatar}
+                            alt={user.avatar}
+                            className={styles.Avatar}
+                          />
+                        ) : (
+                          <>
+                            {user?.name[0]} {user?.name?.split(" ")[1][0]}
+                          </>
+                        )}
                       </p>
-                      <p className={styles.UserNameAndDeveloperType}>
-                        Front-end (50/15)
-                      </p>
+                      <div>
+                        <p className={styles.UserNameAndDeveloperType}>
+                          {user.name}
+                        </p>
+                        <p className={styles.UserNameAndDeveloperType}>
+                          Front-end (50/15)
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                )
+                  )
+              )
+            ) : (
+              <p>No selected user</p>
             )}
           </BigRenderer>
         </form>

@@ -32,6 +32,14 @@ export class Http {
       throw e;
     }
   }
+  
+  static async put(url, headers, data) {
+    try {
+      return await request(url, "PUT", headers, data);
+    } catch (e) {
+      throw e;
+    }
+  }
 }
 
 async function request(url, method = "GET", headers, data) {

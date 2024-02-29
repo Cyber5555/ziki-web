@@ -1,0 +1,10 @@
+.DeveloperPersonalPage {
+  position: relative;
+
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
+  padding: 20px;
+  gap: 30px;
+  background: #fff;
+}

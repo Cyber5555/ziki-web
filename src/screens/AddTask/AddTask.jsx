@@ -10,17 +10,18 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
-import { getAllUsersRequest } from "../../store/authUsersReducer/getAllUsersSlice.tsx";
+
 import UserList from "../../Components/UserList/UserList.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import FileInput from "../../Components/fileInput/fileInput.tsx";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { addTaskRequest } from "../../store/authUsersReducer/addTaskSlice.tsx";
+import { staffListRequest } from "../../store/authUsersReducer/staffListSlice.tsx";
 
 export const AddTask = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { board_id } = useParams();
+  const { project_id } = useParams();
   const [taskImages, setTaskImages] = useState([]);
   const [openUserList, setOpenUserList] = useState(false);
   const [startDate, setStartDate] = useState(moment(new Date()));
@@ -34,7 +35,7 @@ export const AddTask = () => {
     taskName: "",
   });
 
-  const { all_users } = useSelector((state) => state.getAllUsersSlice);
+  const { staff_data } = useSelector((state) => state.staffListSlice);
   const { selectedUsers } = useSelector((state) => state.addUserInProjectSlice);
 
   const handleGetImages = (images) => {
@@ -62,7 +63,7 @@ export const AddTask = () => {
     dispatch(
       addTaskRequest({
         name: formData.taskName,
-        board_id,
+        project_id,
         description: formData.description,
         status_id: localStorage.getItem("status_id"),
         start_date: moment(startDate).format("YYYY-MM-DD"),
@@ -73,7 +74,7 @@ export const AddTask = () => {
       })
     ).then((res) => {
       if (res.payload?.success) {
-        navigate(`/project/${board_id}`, {
+        navigate(`/project/${project_id}`, {
           replace: true,
         });
       }
@@ -82,12 +83,10 @@ export const AddTask = () => {
 
   const openModal = () => {
     setOpenUserList(true);
-    dispatch(getAllUsersRequest({}));
+    dispatch(staffListRequest());
   };
 
-  const closeModal = () => {
-    setOpenUserList(false);
-  };
+  const closeModal = () => setOpenUserList(false);
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -117,6 +116,7 @@ export const AddTask = () => {
                     format="YYYY-MM-DD"
                     onChange={(date) => setStartDate(date)}
                     value={startDate}
+                    minDate={moment(new Date())}
                   />
                 </DemoItem>
               </div>
@@ -127,6 +127,7 @@ export const AddTask = () => {
                     format="YYYY-MM-DD"
                     onChange={(date) => setEndDate(date)}
                     value={endDate}
+                    minDate={moment(new Date())}
                   />
                 </DemoItem>
               </div>
@@ -193,13 +194,22 @@ export const AddTask = () => {
             </div>
 
             <div className={styles.UsersList}>
-              {all_users?.map(
+              {staff_data?.map(
                 (user, index) =>
                   selectedUsers.includes(user.id) && (
                     <div className={styles.CreatedUsers} key={index}>
                       <p className={styles.UserNameFirstLatterOrImage}>
-                        {user?.name && user?.name[0]}
-                        {user?.name && user?.name?.split(" ")[1][0]}
+                        {user.avatar ? (
+                          <img
+                            src={user.avatar}
+                            alt={user.avatar}
+                            className={styles.Avatar}
+                          />
+                        ) : (
+                          <>
+                            {user?.name[0]} {user?.name?.split(" ")[1][0]}
+                          </>
+                        )}
                       </p>
                       <div>
                         <p className={styles.UserNameAndDeveloperType}>

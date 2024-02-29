@@ -1,18 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Http } from "../../http";
 
-interface StaffListData {
-  userId: string;
-}
 
-interface StaffListState {
+
+interface OrganizationDetailsState {
   isLoading: boolean;
-  staff_data: any[];
+  organization_data: any[];
 }
 
-export const staffListRequest = createAsyncThunk(
-  "get/staff",
-  async (userId: StaffListData, { rejectWithValue }) => {
+export const organizationDetailsRequest = createAsyncThunk(
+  "organization/details",
+  async (_, { rejectWithValue }) => {
     const token = localStorage.getItem("userToken");
 
     let headers = {
@@ -20,16 +18,9 @@ export const staffListRequest = createAsyncThunk(
       Authorization: `Bearer ${token}`,
     };
 
-    let url: string = "";
-    if (userId) {
-      url = `api/user/staff/${userId}`;
-    } else {
-      url = "api/user/staff";
-    }
-
     try {
       let response = await Http.get(
-        `${process.env.REACT_APP_API_URL}${url}`,
+        `${process.env.REACT_APP_API_URL}api/organization/details`,
         headers
       );
 
@@ -40,34 +31,36 @@ export const staffListRequest = createAsyncThunk(
   }
 );
 
-const staffListSlice = createSlice({
-  name: "get/staff",
+const organizationDetailsSlice = createSlice({
+  name: "organization/details",
   initialState: {
     isLoading: false,
-    staff_data: [],
-  } as StaffListState,
+    organization_data: [],
+  } as OrganizationDetailsState,
 
   reducers: {},
 
   extraReducers: (builder) => {
     builder
-      .addCase(staffListRequest.pending, (state) => {
+      .addCase(organizationDetailsRequest.pending, (state) => {
         state.isLoading = true;
       })
+
       .addCase(
-        staffListRequest.fulfilled,
+        organizationDetailsRequest.fulfilled,
         (state, action: PayloadAction<any>) => {
           if (action.payload?.success) {
-            state.staff_data = action.payload.payload;
+            state.organization_data = action.payload.payload;
           }
 
           state.isLoading = false;
         }
       )
-      .addCase(staffListRequest.rejected, (state) => {
+
+      .addCase(organizationDetailsRequest.rejected, (state) => {
         state.isLoading = false;
       });
   },
 });
 
-export default staffListSlice.reducer;
+export default organizationDetailsSlice.reducer;

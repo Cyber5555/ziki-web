@@ -11,7 +11,6 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getAllUsersRequest } from "../../store/authUsersReducer/getAllUsersSlice.tsx";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { ClipLoader } from "react-spinners";
 import { singleProjectRequest } from "../../store/authUsersReducer/singleProjectSlice.tsx";
@@ -20,6 +19,7 @@ import { BorderButton } from "../../Components/buttons/borderButton/BorderButton
 import { removeProjectRequest } from "../../store/authUsersReducer/removeProjectSlice.tsx";
 import { toggleSelectUser } from "../../store/otherSlice/addUserInProjectSlice.tsx";
 import { editProjectRequest } from "../../store/authUsersReducer/editProjectSlice.tsx";
+import { staffListRequest } from "../../store/authUsersReducer/staffListSlice.tsx";
 
 export const EditProject = () => {
   const dispatch = useDispatch();
@@ -28,6 +28,7 @@ export const EditProject = () => {
   const { single_data } = useSelector((state) => state.singleProjectSlice);
   const { selectedUsers } = useSelector((state) => state.addUserInProjectSlice);
   const { isLoadingRemove } = useSelector((state) => state.removeProjectSlice);
+  const [isEditProject, setIsEditProject] = useState(false);
 
   const [startDate, setStartDate] = useState(moment(new Date()));
   const [endDate, setEndDate] = useState(null);
@@ -38,12 +39,6 @@ export const EditProject = () => {
   const [projectLogo, setProjectLogo] = useState(null);
   const [projectTZ, setProjectTZ] = useState(null);
 
-  const [isEditName, setIsEditName] = useState(false);
-  const [isEditDescription, setIsEditDescription] = useState(false);
-  const [isEditDate, setIsEditDate] = useState(false);
-  const [isEditProjectLogo, setIsEditProjectLogo] = useState(false);
-  const [isEditProjectTZ, setIsEditProjectTZ] = useState(false);
-
   const [openUserList, setOpenUserList] = useState(false);
   const { isLoading, errorMessages } = useSelector(
     (state) => state.editProjectSlice
@@ -52,7 +47,7 @@ export const EditProject = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await dispatch(singleProjectRequest(project_id));
-      if (response.payload.success) {
+      if (response.payload?.success) {
         const { name, description, users, start_date, end_date } =
           response.payload?.payload;
 
@@ -77,12 +72,10 @@ export const EditProject = () => {
 
   const openModal = () => {
     setOpenUserList(true);
-    dispatch(getAllUsersRequest({}));
+    dispatch(staffListRequest());
   };
 
-  const closeModal = () => {
-    setOpenUserList(false);
-  };
+  const closeModal = () => setOpenUserList(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -124,6 +117,17 @@ export const EditProject = () => {
         <BigRenderer>
           <form onSubmit={handleSubmit} className={styles.Form}>
             <div className={styles.ScrollBox}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "end",
+                  marginBottom: 10,
+                }}>
+                <EditIcon
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setIsEditProject(!isEditProject)}
+                />
+              </div>
               <div className={styles.PageTitleParent}>
                 <input
                   className={styles.PageTitle}
@@ -131,81 +135,59 @@ export const EditProject = () => {
                   placeholder="Project"
                   name="projectName"
                   onChange={handleChange}
-                  disabled={!isEditName}
-                />
-                <EditIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setIsEditName(!isEditName)}
+                  disabled={!isEditProject}
                 />
               </div>
               <div className={styles.StartAndDeadlineMainParent}>
-                <div className={styles.StartAndDeadlineParent}>
-                  <div className={styles.WorkingTimeParent}>
-                    <DemoItem label="Start">
-                      <MobileDatePicker
-                        // defaultValue={moment(new Date())}
-                        className={styles.StartAndDeadlineDate}
-                        format="YYYY-MM-DD"
-                        onChange={(e) => setStartDate(e)}
-                        value={startDate}
-                        disabled={!isEditDate}
-                      />
-                    </DemoItem>
-                    <p className={styles.ErrorMessage}>
-                      {/* {errorMessages?.name ||
-                    (errors.startDate && touched.startDate && errors.startDate)} */}
-                    </p>
-                  </div>
-                  <div className={styles.WorkingTimeParent}>
-                    <DemoItem label="Deadline">
-                      <MobileDatePicker
-                        className={styles.StartAndDeadlineDate}
-                        format="YYYY-MM-DD"
-                        onChange={(e) => setEndDate(e)}
-                        value={endDate}
-                        disabled={!isEditDate}
-                      />
-                    </DemoItem>
-                    <p className={styles.ErrorMessage}>
-                      {/* {errorMessages?.name ||
-                    (errors.endDate && touched.endDate && errors.endDate)} */}
-                    </p>
-                  </div>
+                <div className={styles.WorkingTimeParent}>
+                  <DemoItem label="Start">
+                    <MobileDatePicker
+                      className={styles.StartAndDeadlineDate}
+                      format="YYYY-MM-DD"
+                      onChange={(e) => setStartDate(e)}
+                      value={startDate}
+                      disabled={!isEditProject}
+                      minDate={moment(new Date())}
+                    />
+                  </DemoItem>
+                  {/* <p className={styles.ErrorMessage}></p> */}
                 </div>
-                <EditIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setIsEditDate(!isEditDate)}
-                />
+                <div className={styles.WorkingTimeParent}>
+                  <DemoItem label="Deadline">
+                    <MobileDatePicker
+                      className={styles.StartAndDeadlineDate}
+                      format="YYYY-MM-DD"
+                      onChange={(e) => setEndDate(e)}
+                      value={endDate}
+                      disabled={!isEditProject}
+                      minDate={moment(new Date())}
+                    />
+                  </DemoItem>
+                  {/* <p className={styles.ErrorMessage}></p> */}
+                </div>
               </div>
-              <div className={styles.DescriptionTitleParent}>
-                <h2 className={styles.DescriptionTitle}>Description</h2>
-                <EditIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setIsEditDescription(!isEditDescription)}
-                />
-              </div>
+
+              <h2 className={styles.DescriptionTitle}>Description</h2>
+
               <TextareaAutosize
                 className={styles.Description}
                 aria-label="empty textarea"
                 placeholder="Empty"
-                disabled={!isEditDescription}
+                disabled={!isEditProject}
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 defaultValue={single_data?.description}
               />
 
-              <div className={styles.ProjectLogoParent}>
+              {single_data?.project_logo || projectLogo || isEditProject ? (
                 <h2 className={styles.ProjectLogoTitle}>Project logo</h2>
-                <EditIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setIsEditProjectLogo(!isEditProjectLogo)}
-                />
-              </div>
-              {isEditProjectLogo ? (
+              ) : null}
+
+              {isEditProject ? (
                 <FileInput
                   parentStyle={{
-                    marginTop: 13,
+                    margin: "13px 9px",
                   }}
                   onChange={(e) => {
                     setProjectLogo(e.target.files[0]);
@@ -215,25 +197,22 @@ export const EditProject = () => {
                   }}>
                   {projectLogo?.name || "+ Add project logo"}
                 </FileInput>
-              ) : (
+              ) : single_data?.project_logo || projectLogo ? (
                 <img
                   src={single_data?.project_logo || projectLogo}
                   alt="Project Logo"
                   className={styles.ProjectLogo}
                 />
-              )}
+              ) : null}
 
-              <div className={styles.ProjectTZParent}>
+              {single_data?.project_tz || projectTZ || isEditProject ? (
                 <h2 className={styles.ProjectTZTitle}>Project TZ</h2>
-                <EditIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setIsEditProjectTZ(!isEditProjectTZ)}
-                />
-              </div>
-              {isEditProjectTZ ? (
+              ) : null}
+
+              {isEditProject ? (
                 <FileInput
                   parentStyle={{
-                    marginTop: 13,
+                    margin: "13px 9px",
                   }}
                   onChange={(e) => {
                     setProjectTZ(e.target.files[0]);
@@ -261,29 +240,40 @@ export const EditProject = () => {
                 {errorMessages?.project_tz}
               </p>
 
-              <div className={styles.UsersParent}>
-                <h2 className={styles.UsersTitle}>Users</h2>
-                <EditIcon style={{ cursor: "pointer" }} onClick={openModal} />
-              </div>
-
+              <h2 className={styles.UsersTitle}>Users</h2>
+              {isEditProject && (
+                <BorderButton style={{ margin: 9 }} onClick={openModal}>
+                  Edit users
+                </BorderButton>
+              )}
               {single_data?.users?.map(
-                (user, index) =>
-                  selectedUsers.includes(user.id) && (
-                    <div className={styles.CreatedUsers} key={index}>
-                      <p className={styles.UserNameFirstLatterOrImage}>
-                        {user?.name && user?.name[0]}
-                        {user?.name && user?.name?.split(" ")[1][0]}
+                (user, index) => (
+                  // selectedUsers.includes(user.id) && (
+                  <div className={styles.CreatedUsers} key={index}>
+                    <p className={styles.UserNameFirstLatterOrImage}>
+                      {user.avatar ? (
+                        <img
+                          src={user.avatar}
+                          alt={user.avatar}
+                          className={styles.Avatar}
+                        />
+                      ) : (
+                        <>
+                          {user?.name[0]} {user?.name?.split(" ")[1][0]}
+                        </>
+                      )}
+                    </p>
+                    <div>
+                      <p className={styles.UserNameAndDeveloperType}>
+                        {user.name}
                       </p>
-                      <div>
-                        <p className={styles.UserNameAndDeveloperType}>
-                          {user.name}
-                        </p>
-                        <p className={styles.UserNameAndDeveloperType}>
-                          Front-end (50/15)
-                        </p>
-                      </div>
+                      <p className={styles.UserNameAndDeveloperType}>
+                        Front-end (50/15)
+                      </p>
                     </div>
-                  )
+                  </div>
+                )
+                //   )
               )}
             </div>
             <div className={styles.ButtonsParent}>

@@ -26,9 +26,20 @@ export const singleProjectRequest = createAsyncThunk<any, SingleProjectData>(
       Authorization: `Bearer ${token}`,
     };
 
+    const role = localStorage.getItem("role");
+    let url: string = "";
+    if (role) {
+      const roleId = parseInt(role, 10); // или Number(role)
+      if (roleId === 2) {
+        url = "api/organization/project/";
+      } else if (roleId === 3) {
+        url = "api/user/project/";
+      }
+    }
+
     try {
       const response = await Http.get(
-        `${process.env.REACT_APP_API_URL}api/organization/project/${project_id}`,
+        `${process.env.REACT_APP_API_URL}${url}${project_id}`,
         headers
       );
 

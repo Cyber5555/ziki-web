@@ -6,13 +6,13 @@ import { toggleSelectUser } from "../../store/otherSlice/addUserInProjectSlice.t
 
 const UserList = ({ isOpen, close }) => {
   const dispatch = useDispatch();
-  const { all_users } = useSelector((state) => state.getAllUsersSlice);
+  const { staff_data } = useSelector((state) => state.staffListSlice);
   const { selectedUsers } = useSelector((state) => state.addUserInProjectSlice);
 
   const handleCheckboxChange = (item) => {
     dispatch(toggleSelectUser(item));
   };
-
+  
   return (
     <div className={`${isOpen ? styles.Background : styles.BackgroundClosed}`}>
       <div className={styles.UserListParent}>
@@ -20,16 +20,24 @@ const UserList = ({ isOpen, close }) => {
           <CloseIcon />
         </span>
         <div className={styles.UserList}>
-          {all_users.map((user, i) => (
-            <div className={styles.Users} key={i}>
+          {staff_data.map((user, i) => (
+            <label className={styles.Users} key={i}>
               <div className={styles.LeftSide}>
                 <div className={styles.UserNameFirstLatterOrImage}>
-                  {user.name[0]}
+                  {user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.avatar}
+                      className={styles.Avatar}
+                    />
+                  ) : (
+                    user.name[0]
+                  )}
                 </div>
                 <div>
                   <p className={styles.UserNameAndDeveloperType}>{user.name}</p>
                   <p className={styles.UserNameAndDeveloperType}>
-                    Front-end (50/15)
+                    {user.stack} (50/15)
                   </p>
                 </div>
               </div>
@@ -40,7 +48,7 @@ const UserList = ({ isOpen, close }) => {
                 checked={selectedUsers.includes(user.id)}
                 onChange={() => handleCheckboxChange(user.id)}
               />
-            </div>
+            </label>
           ))}
         </div>
       </div>

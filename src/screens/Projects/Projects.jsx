@@ -3,11 +3,13 @@ import { RenderedItems } from "../../Components/RenderedItems/RenderedItems.jsx"
 import styles from "./projects.module.css";
 import { BlueButton } from "../../Components/buttons/blueButton/BlueButton.jsx";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProjectsRequest } from "../../store/authUsersReducer/getAllProjectsSlice.tsx";
 import { pusher } from "../../pusher.js";
 import { ReactComponent as EditIcon } from "../../Assets/icons/editIcon.svg";
+
+const role = localStorage.getItem("role");
 
 export const Projects = () => {
   const dispatch = useDispatch();
@@ -33,16 +35,36 @@ export const Projects = () => {
     navigate(`/project/${boardId}`);
   };
 
+  if (all_project_data?.length === 0) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <p>you are not a project</p>
+        <BlueButton onClick={() => navigate("/add-project")}>
+          + Add project
+        </BlueButton>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.Projects}>
       {all_project_data?.map((board, index) => (
         <RenderedItems key={index}>
           <div className={styles.TitleParent}>
             <h2 className={styles.Title}>{board?.name}</h2>
-            <EditIcon
-              onClick={() => navigate(`/edit-project/${board.id}`)}
-              className={styles.EditIcon}
-            />
+            {role === "2" && (
+              <EditIcon
+                onClick={() => navigate(`/edit-project/${board.id}`)}
+                className={styles.EditIcon}
+              />
+            )}
           </div>
           <p className={styles.Status}>Status - Stopped</p>
           <p className={styles.TaskInfo}>{board?.description}</p>
@@ -67,8 +89,17 @@ export const Projects = () => {
               {board?.users?.map((user, userIndex) => (
                 <div className={styles.CreatedUsers} key={userIndex}>
                   <p className={styles.UserNameFirstLatterOrImage}>
-                    {user?.name && user?.name[0]}
-                    {user?.name && user?.name?.split(" ")[1][0]}
+                    {user.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.avatar}
+                        className={styles.Avatar}
+                      />
+                    ) : (
+                      <>
+                        {user?.name[0]} {user?.name?.split(" ")[1][0]}
+                      </>
+                    )}
                   </p>
                   <div>
                     <p className={styles.UserNameAndDeveloperType}>

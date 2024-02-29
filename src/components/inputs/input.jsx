@@ -14,9 +14,10 @@ const Input = ({
   password,
   errorMessage,
   name,
+  parentStyle,
 }) => {
   return (
-    <div className={styles.InputParent}>
+    <div className={styles.InputParent} style={parentStyle}>
       <TextField
         id="outlined-basic"
         label={label}

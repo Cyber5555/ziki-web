@@ -1,0 +1,13 @@
+.PersonalSettings {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  padding: 20px;
+}
+
+.PersonalSettingsForm {
+  width: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

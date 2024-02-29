@@ -4,6 +4,8 @@ import { BlueButton } from "../buttons/blueButton/BlueButton";
 import { BorderButton } from "../buttons/borderButton/BorderButton";
 import styles from "./taskModal.module.css";
 
+const role = localStorage.getItem("role");
+
 const CheckBoxList = () => {
   const [orders, setOrders] = useState([
     {
@@ -117,7 +119,6 @@ const CheckBoxList = () => {
               onFocus={() => isFocused(item.id)}
               onBlur={() => isBlur(item.id)}
               style={{ textDecoration: item.checked ? "line-through" : "none" }}
-              // defaultValue={item.text}
               autoFocus={focusedItemId === item.id ? true : false}></textarea>
           </div>
           {focusedItemId === item.id && (
@@ -131,7 +132,10 @@ const CheckBoxList = () => {
         </div>
       ))}
       {!focusedItemId && (
-        <BlueButton style={{ position: "static" }} onClick={addEmptyList}>
+        <BlueButton
+          style={{ position: "static" }}
+          role={role === "2"}
+          onClick={addEmptyList}>
           Add List
         </BlueButton>
       )}

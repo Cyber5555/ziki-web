@@ -3,7 +3,7 @@ import { Http } from "../../http";
 
 interface UpdateTaskSortData {
   board_data: string;
-  board_id: string;
+  project_id: string;
 }
 
 interface UpdateTaskSortState {
@@ -30,7 +30,7 @@ export const updateTaskSortRequest = createAsyncThunk<any, UpdateTaskSortData>(
     const form_data = new FormData();
     form_data.append("_method", "PUT");
     form_data.append("board_data", data.board_data);
-    form_data.append("project_id", data.board_id || "");
+    form_data.append("project_id", data.project_id || "");
 
     try {
       const response = await Http.post(

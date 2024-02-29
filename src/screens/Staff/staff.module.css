@@ -1,79 +1,99 @@
 .Staff {
-  height: 100%;
-  display: flex;
-  gap: 30px;
-  overflow-x: scroll;
-  padding: 0 6px;
   position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
+  padding: 0 6px;
+  gap: 30px;
 }
-
 
 .ProjectsDevelopmentParent {
+  width: 250px;
   padding: 10px 8px;
-  border: 0.5px solid #495584;
+  /* border: 0.5px solid #495584; */
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.Title {
-  color: #495584;
+/* .Title {
   font-size: 15px;
+  color: #495584;
 }
 
 .Line {
   width: 100%;
   height: 2px;
-  background: #D9D9D9;
   margin: 18px 0;
-}
-
+  background: #d9d9d9;
+} */
 
 .CreatedUsers {
-  width: 50%;
   display: flex;
   align-items: center;
+  width: 100%;
   gap: 10px;
-}
-
-.UserNameFirstLatterOrImage {
-  width: 24px;
-  height: 24px;
-  border: 0.5px solid #0E9FB3;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: #0E9FB3;
-}
-
-.UserNameAndDeveloperType {
-  color: #495584;
-  font-size: 8px;
   position: relative;
 }
 
-#UserName::after {
-  content: '';
+.CreatedUsers::after {
   position: absolute;
+  top: 0;
+  right: 0;
   width: 4px;
   height: 4px;
+  content: "";
   border-radius: 50%;
-  background: #05DE4F;
-  right: -10px;
-  top: 0;
+  background: #05de4f;
+}
+
+.UserNameFirstLatterOrImage {
+  display: grid;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  color: #0e9fb3;
+  border: 0.5px solid #0e9fb3;
+  border-radius: 50%;
+  place-items: center;
+  overflow: hidden;
+}
+
+.UserName {
+  font-size: 18px;
+  color: #495584;
+  white-space: pre;
+}
+
+.DeveloperType {
+  font-size: 14px;
+  color: #495584;
+  white-space: pre;
+}
+
+#UserName {
+  text-transform: capitalize;
+}
+
+.Avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .ProjectsDevelopmentTitle {
-  color: #495584;
   font-size: 12px;
   margin-top: 18px;
+  color: #495584;
 }
 
 .ProjectsDevelopmentUL {
-  color: #212529;
-  font-size: 8px;
+  font-size: 15px;
+  display: grid;
+  margin-top: 6px;
   list-style: disc;
   list-style-position: inside;
-  margin-top: 6px;
-  display: grid;
+  color: #212529;
   gap: 6px;
 }
-
-

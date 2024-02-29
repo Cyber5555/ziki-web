@@ -2,7 +2,7 @@ import { Player, Controls } from "@lottiefiles/react-lottie-player";
 
 export const NotFound = () => {
   return (
-    <div style={{ height: "80vh", width: "100%" }}>
+    <div style={{ height: "80vh", width: "100vw" }}>
       <Player
         autoplay
         loop

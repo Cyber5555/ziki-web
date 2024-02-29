@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Http } from "../../http";
 
 interface UserDetailResponse {
@@ -49,6 +49,10 @@ const authUserDetailSlice = createSlice({
       .addCase(authUserDetailRequest.fulfilled, (state, action) => {
         if (action.payload?.success) {
           state.user_data = action.payload.payload;
+          localStorage.setItem(
+            "organization_id",
+            action.payload.payload.organization_id
+          );
         }
 
         state.isLoading = false;

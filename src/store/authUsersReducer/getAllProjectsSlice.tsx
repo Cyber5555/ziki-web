@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Http } from "../../http";
 
 interface ProjectData {
@@ -16,9 +16,20 @@ export const getAllProjectsRequest = createAsyncThunk(
       Authorization: `Bearer ${token}`,
     };
 
+    const role = localStorage.getItem("role");
+    let url: string = "";
+    if (role) {
+      const roleId = parseInt(role, 10); // или Number(role)
+      if (roleId === 2) {
+        url = "api/organization/projects";
+      } else if (roleId === 3) {
+        url = "api/user/projects";
+      }
+    }
+
     try {
       let response = await Http.get(
-        `${process.env.REACT_APP_API_URL}api/organization/projects`,
+        `${process.env.REACT_APP_API_URL}${url}`,
         headers
       );
 

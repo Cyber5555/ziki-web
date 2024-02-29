@@ -8,6 +8,7 @@ import {
 } from "../../store/authSystemReducer/loginSlice.tsx";
 import { ClipLoader } from "react-spinners";
 import { BlueButton } from "../../Components/buttons/blueButton/BlueButton.jsx";
+import { Link } from "react-router-dom";
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
@@ -52,6 +53,7 @@ export const LoginPage = () => {
             setEmail(e.target.value);
             dispatch(clearErrorLogin());
           }}
+          name={"email"}
           error={isError?.trim()?.length > 0}
         />
 
@@ -88,6 +90,10 @@ export const LoginPage = () => {
             "Sign In"
           )}
         </BlueButton>
+        <Link to={"/register"} style={{ color: "#6259ca", marginTop: 10 }}>
+          {" "}
+          Do you have an account ?
+        </Link>
         {<p className={styles.ErrorMessage}>{errorMessage}</p>}
       </form>
     </div>

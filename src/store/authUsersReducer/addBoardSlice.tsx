@@ -3,7 +3,7 @@ import { Http } from "../../http";
 
 interface AddBoardData {
   newBoardName: string;
-  board_id: string;
+  project_id: string;
 }
 
 interface AddBoardState {
@@ -21,7 +21,7 @@ export const addBoardRequest = createAsyncThunk(
     };
     let form_data = new FormData();
     form_data.append("name", data.newBoardName);
-    form_data.append("project_id", data.board_id);
+    form_data.append("project_id", data.project_id);
 
     try {
       let response = await Http.post(

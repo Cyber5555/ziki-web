@@ -3,7 +3,7 @@ import { Http } from "../../http";
 
 interface AddCheckListData {
   name: string;
-  board_id: string;
+  project_id: string;
   description: string;
   status_id: string;
   start_date: string;
