@@ -8,6 +8,7 @@ import { organizationDetailsRequest } from "../../store/authUsersReducer/organiz
 import { BlueButton } from "../../Components/buttons/blueButton/BlueButton.jsx";
 import { updateOrganizationDetailsRequest } from "../../store/authUsersReducer/updateOrganizationDetailsSlice.tsx";
 import { BorderButton } from "../../Components/buttons/borderButton/BorderButton.jsx";
+import { updateProfileRequest } from "../../store/authUsersReducer/updateProfileSlice.tsx";
 
 const role = localStorage.getItem("role");
 
@@ -20,7 +21,11 @@ const PersonalPage = () => {
   );
   const [name, setName] = useState("");
   const [logo, setLogo] = useState(null);
-  const [company_name, setCompanyName] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    stack: "",
+    email: "",
+  });
 
   useEffect(() => {
     if (role === "2") {
@@ -29,16 +34,29 @@ const PersonalPage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setName(user_data.name);
-    setCompanyName(organization_data.name);
-  }, [organization_data.name, user_data.avatar, user_data.name]);
+    setName(organization_data?.name);
+    setFormData({
+      name: user_data.name,
+      email: user_data.email,
+      stack: user_data.stack,
+    });
+  }, [organization_data?.name, user_data]);
 
-  const submitChanges = () => {
+  const submitCompanyChanges = () => {
     dispatch(
       updateOrganizationDetailsRequest({
         name: name,
-        logo: logo.sent,
-        company_name: company_name,
+        logo: logo,
+      })
+    );
+  };
+  const submitUserChanges = () => {
+    dispatch(
+      updateProfileRequest({
+        name: formData.name,
+        avatar: logo,
+        email: formData.email,
+        stack: formData.stack,
       })
     );
   };
@@ -50,6 +68,11 @@ const PersonalPage = () => {
       const imageUrl = URL.createObjectURL(file);
       setLogo({ show: imageUrl, send: file });
     }
+  };
+
+  const handleChangeProfile = ({ target }) => {
+    const { name, value } = target;
+    setFormData({ ...formData, [name]: value });
   };
 
   return (
@@ -87,19 +110,34 @@ const PersonalPage = () => {
           <Tooltip title="Click for change name" arrow>
             <input
               className={styles.Inputs}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={formData.name}
+              onChange={handleChangeProfile}
+              name="name"
             />
           </Tooltip>
           <Tooltip title="Click for change stack" arrow>
             <input
               className={styles.Inputs}
               value={organization_data?.owner?.stack}
-              onChange={(e) => setName(e.target.value)}
+              onChange={handleChangeProfile}
               placeholder="Stack"
+              name="stack"
+            />
+          </Tooltip>
+          <Tooltip title="Click for change email" arrow>
+            <input
+              className={styles.Inputs}
+              value={organization_data?.owner?.stack}
+              onChange={handleChangeProfile}
+              placeholder="Email"
+              type="email"
+              name="email"
             />
           </Tooltip>
         </div>
+        <BlueButton onClick={submitUserChanges} style={{ position: "static" }}>
+          Save
+        </BlueButton>
       </div>
 
       {role === "2" && (
@@ -109,17 +147,10 @@ const PersonalPage = () => {
             <Tooltip title="Click for change company name" arrow>
               <input
                 className={styles.Inputs}
-                value={organization_data?.name}
-                onChange={(e) => setName(e.target.value)}
+                value={name}
+                onChange={({ target }) => setName(target.value)}
               />
             </Tooltip>
-            {/* <Tooltip title="Click for change company name" arrow>
-              <input
-                className={styles.Inputs}
-                value={organization_data?.name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Tooltip> */}
           </div>
           <BorderButton
             style={{
@@ -129,9 +160,13 @@ const PersonalPage = () => {
             }}>
             Remove Organization
           </BorderButton>
+          <BlueButton
+            onClick={submitCompanyChanges}
+            style={{ position: "static" }}>
+            Save
+          </BlueButton>
         </div>
       )}
-      <BlueButton onClick={submitChanges}>Save</BlueButton>
     </div>
   );
 };

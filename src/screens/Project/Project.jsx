@@ -25,50 +25,43 @@ const role = localStorage.getItem("role");
 const Project = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [boards, setBoards] = useState([]);
-  const [full_data, setFullData] = useState([]);
-  const [openTaskModal, setOpenTaskModal] = useState(false);
-  const [newBoardName, setNewBoardName] = useState("");
   const { project_id } = useParams();
 
-  // const channel = pusher.subscribe("project-list");
-  // channel.bind("task.sort-updated", function (data) {
-  //   dispatch(singleProjectRequest(project_id)).then((res) => {
-  //     setBoards(res.payload?.payload?.statuses);
-  //     setFullData(res.payload?.payload);
-  //     channel.unbind("task.sort-updated");
-  //     channel.unbind_all();
-  //   });
-  //   return data;
-  // });
+  const [boards, setBoards] = useState([]);
 
+  const [openTaskModal, setOpenTaskModal] = useState(false);
+  const [newBoardName, setNewBoardName] = useState("");
   useEffect(() => {
     const channel = pusher.subscribe("project-list");
 
-    const handleTaskSortUpdated = (data) => {
+    const handleTaskSortUpdated = () => {
       dispatch(singleProjectRequest(project_id)).then((res) => {
         setBoards(res.payload?.payload?.statuses);
-        setFullData(res.payload?.payload);
       });
     };
 
     channel.bind("task.sort-updated", handleTaskSortUpdated);
+    channel.bind("task.created", handleTaskSortUpdated);
+    channel.bind("task.deleted", handleTaskSortUpdated);
+    channel.bind("status.deleted", handleTaskSortUpdated);
+    channel.bind("status.created", handleTaskSortUpdated);
+    channel.bind("task.assigned", handleTaskSortUpdated);
 
     return () => {
-      channel.unbind("task.sort-updated", handleTaskSortUpdated);
       channel.unbind_all();
+      channel.unsubscribe();
     };
   }, [dispatch, project_id]);
 
   useEffect(() => {
     dispatch(singleProjectRequest(project_id)).then((res) => {
       setBoards(res.payload?.payload?.statuses);
-      setFullData(res.payload?.payload);
-    });
-    dispatch(changeTitle({ title: full_data?.name }));
-  }, [dispatch, project_id, full_data?.name]);
 
-  function onDragEnd(result) {
+      dispatch(changeTitle({ title: res.payload?.payload?.name }));
+    });
+  }, [dispatch, project_id]);
+
+  const onDragEnd = (result) => {
     const { draggableId, source, destination } = result;
     if (!destination) return;
 
@@ -84,17 +77,11 @@ const Project = () => {
       const [draggedTask] = newTasks.splice(source.index, 1);
       newTasks.splice(destination.index, 0, draggedTask);
 
-      const newColumns = boards.map((column) => {
-        if (column.id === sourceColumn.id) {
-          return {
-            ...column,
-            tasks: newTasks,
-          };
-        }
-        return column;
-      });
+      const newColumns = boards.map((column) =>
+        column.id === sourceColumn.id ? { ...column, tasks: newTasks } : column
+      );
 
-      const new_tasks_id = newColumns.map((board) => ({
+      const newTasksData = newColumns.map((board) => ({
         column_id: board.id,
         task_id: board.tasks.map((task) => task?.id),
         sort: board.tasks.map((_, index) => index),
@@ -103,7 +90,7 @@ const Project = () => {
       setBoards(newColumns);
       dispatch(
         updateTaskSortRequest({
-          board_data: JSON.stringify(new_tasks_id),
+          board_data: JSON.stringify(newTasksData),
           project_id,
         })
       );
@@ -117,23 +104,15 @@ const Project = () => {
       const newSourceTasks = [...sourceColumn.tasks];
       newSourceTasks.splice(source.index, 1);
 
-      const newColumns = boards.map((column) => {
-        if (column.id === sourceColumn.id) {
-          return {
-            ...column,
-            tasks: newSourceTasks,
-          };
-        }
-        if (column.id === destinationColumn.id) {
-          return {
-            ...column,
-            tasks: newDestinationTasks,
-          };
-        }
-        return column;
-      });
+      const newColumns = boards.map((column) =>
+        column.id === sourceColumn.id
+          ? { ...column, tasks: newSourceTasks }
+          : column.id === destinationColumn.id
+            ? { ...column, tasks: newDestinationTasks }
+            : column
+      );
 
-      const new_tasks_id = newColumns.map((board) => ({
+      const newTasksData = newColumns.map((board) => ({
         column_id: board.id,
         task_id: board.tasks.map((task) => task?.id),
         sort: board.tasks.map((_, index) => index),
@@ -142,12 +121,12 @@ const Project = () => {
       setBoards(newColumns);
       dispatch(
         updateTaskSortRequest({
-          board_data: JSON.stringify(new_tasks_id),
+          board_data: JSON.stringify(newTasksData),
           project_id,
         })
       );
     }
-  }
+  };
 
   const getListStyle = (isDraggingOver) => ({
     boxShadow: isDraggingOver && "0 0 5px #6259ca",
@@ -181,7 +160,6 @@ const Project = () => {
       if (result.payload.success) {
         dispatch(singleProjectRequest(project_id)).then((res) => {
           setBoards(res.payload?.payload?.statuses);
-          setFullData(res.payload?.payload);
         });
       }
     });
@@ -197,13 +175,13 @@ const Project = () => {
   };
 
   const removeBoard = (boardId) => {
-    dispatch(removeBoardRequest(boardId));
+    dispatch(removeBoardRequest(boardId)).then((response) => {});
     setBoards((prevBoards) =>
       prevBoards.filter((board) => board.id !== boardId)
     );
   };
 
-  function renderBoard(board, i) {
+  const renderBoard = (board, i) => {
     return (
       <RenderedItems key={i}>
         <div className={styles.BoardTitleParent}>
@@ -213,31 +191,33 @@ const Project = () => {
                 {board.name}{" "}
                 <span className={styles.SubTitle}>({board.tasks?.length})</span>
               </h2>
-              <div className={styles.RightSideIcons}>
-                <Tooltip title="Delete Board" arrow>
-                  <DeleteOutlineIcon
-                    style={{
-                      cursor: "pointer",
-                      color: "red",
-                      fontSize: 20,
-                    }}
-                    onClick={() => removeBoard(board.id)}
-                  />
-                </Tooltip>
-                <Tooltip title="Add new task" arrow>
-                  <AddTaskIcon
-                    style={{
-                      color: "black",
-                      fontSize: 18,
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      navigate(`/add-task/${project_id}`);
-                      localStorage.setItem("status_id", board.id);
-                    }}
-                  />
-                </Tooltip>
-              </div>
+              {role === "2" && (
+                <div className={styles.RightSideIcons}>
+                  <Tooltip title="Delete Board" arrow>
+                    <DeleteOutlineIcon
+                      style={{
+                        cursor: "pointer",
+                        color: "red",
+                        fontSize: 20,
+                      }}
+                      onClick={() => removeBoard(board.id)}
+                    />
+                  </Tooltip>
+                  <Tooltip title="Add new task" arrow>
+                    <AddTaskIcon
+                      style={{
+                        color: "black",
+                        fontSize: 18,
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        navigate(`/add-task/${project_id}`);
+                        localStorage.setItem("status_id", board.id);
+                      }}
+                    />
+                  </Tooltip>
+                </div>
+              )}
             </>
           ) : (
             <div className={styles.InputParent}>
@@ -325,7 +305,7 @@ const Project = () => {
         </Droppable>
       </RenderedItems>
     );
-  }
+  };
 
   return (
     <div className={styles.Project}>

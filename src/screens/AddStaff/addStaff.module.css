@@ -28,9 +28,3 @@
   /* justify-content: flex-end; */
   gap: 5px;
 }
-
-.ErrorMessage {
-  color: red;
-  margin: 5px 0 0;
-  font: 12px sans-serif;
-}

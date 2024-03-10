@@ -1,3 +1,5 @@
+@import "../Variables.css";
+
 .RobotEset {
   width: 40px;
   height: 45px;
@@ -10,15 +12,8 @@
   align-items: center;
   gap: 20px;
   padding-left: 20px;
-  box-shadow: 0 0 12px rgba(138, 152, 172, 0.5);
-  border-right: 0.5px solid rgba(138, 152, 172, 0.1);
-}
-
-.Aside {
-  background-color: #fff;
-  box-shadow: 7px 4px 12px 0 rgba(138, 152, 172, 0.04);
-  height: 100vh;
-  overflow: hidden;
+  box-shadow: 0 0 12px var(--box-shadow-color);
+  border-right: 0.5px solid var(--border-color);
 }
 
 .SideBarUl {
@@ -26,8 +21,15 @@
   width: 100%;
 }
 
+.Aside {
+  background-color: var(--main-background-color);
+  box-shadow: 7px 4px 12px 0 var(--box-shadow-color);
+  height: 100vh;
+  overflow: hidden;
+}
+
 .SideBarList {
-  color: #495584;
+  color: var(--text-color);
   font-size: 14px;
   height: 50px;
   display: flex;
@@ -38,33 +40,30 @@
   border-bottom: 0.5px dashed rgba(75, 88, 133, 0.15);
 }
 
-.SideBarList.active::before {
-  content: "";
-  width: 22px;
-  height: 22px;
-  position: absolute;
-  /* background: #6259ca; */
-  right: 0;
-  top: -22px;
-  border-radius: 50%;
-  box-shadow: 5px 5px 2px #6259ca;
-}
-
+.SideBarList.active::before,
 .SideBarList.active::after {
   content: "";
   width: 22px;
   height: 22px;
   position: absolute;
-  /* background: #6259ca; */
-  right: 0px;
-  bottom: -22px;
+  right: 0;
   border-radius: 50%;
-  box-shadow: 5px -5px 2px #6259ca;
+}
+
+.SideBarList.active::before {
+  top: -22px;
+  box-shadow: 5px 5px 2px var(--active-shadow-color);
+}
+
+.SideBarList.active::after {
+  bottom: -22px;
+  box-shadow: 5px -5px 2px var(--active-shadow-color);
 }
 
 .SideBarList.active {
   border-radius: 20px 0 0 20px;
-  background: #6259ca;
+  background: var(--active-background);
+  width: 100%;
 }
 
 .SideBarList.active .SideBarIcons {

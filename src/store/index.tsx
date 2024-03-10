@@ -20,6 +20,9 @@ import staffListSlice from "./authUsersReducer/staffListSlice.tsx";
 import inviteUserSlice from "./authUsersReducer/inviteUserSlice.tsx";
 import organizationDetailsSlice from "./authUsersReducer/organizationDetailsSlice.tsx";
 import updatePasswordSlice from "./authUsersReducer/updatePasswordSlice.tsx";
+import deleteTaskSlice from "./authUsersReducer/deleteTaskSlice.tsx";
+import adminCreateNewUserSlice from "./authUsersReducer/adminCreateNewUserSlice.tsx";
+import updateTaskSlice from "./authUsersReducer/updateTaskSlice.tsx";
 
 const rootReducer = combineReducers({
   loginSlice,
@@ -43,6 +46,9 @@ const rootReducer = combineReducers({
   inviteUserSlice,
   organizationDetailsSlice,
   updatePasswordSlice,
+  deleteTaskSlice,
+  adminCreateNewUserSlice,
+  updateTaskSlice
 });
 
 export const store = configureStore({

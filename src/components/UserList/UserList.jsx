@@ -12,7 +12,7 @@ const UserList = ({ isOpen, close }) => {
   const handleCheckboxChange = (item) => {
     dispatch(toggleSelectUser(item));
   };
-  
+
   return (
     <div className={`${isOpen ? styles.Background : styles.BackgroundClosed}`}>
       <div className={styles.UserListParent}>
@@ -24,14 +24,14 @@ const UserList = ({ isOpen, close }) => {
             <label className={styles.Users} key={i}>
               <div className={styles.LeftSide}>
                 <div className={styles.UserNameFirstLatterOrImage}>
-                  {user.avatar ? (
+                  {user?.avatar ? (
                     <img
                       src={user.avatar}
                       alt={user.avatar}
                       className={styles.Avatar}
                     />
                   ) : (
-                    user.name[0]
+                    user?.name[0]
                   )}
                 </div>
                 <div>
@@ -45,8 +45,8 @@ const UserList = ({ isOpen, close }) => {
               <input
                 type="checkbox"
                 className={styles.Checkbox}
-                checked={selectedUsers.includes(user.id)}
-                onChange={() => handleCheckboxChange(user.id)}
+                checked={selectedUsers.includes(user)}
+                onChange={() => handleCheckboxChange(user)}
               />
             </label>
           ))}

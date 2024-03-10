@@ -43,7 +43,7 @@ export const EditProject = () => {
   const { isLoading, errorMessages } = useSelector(
     (state) => state.editProjectSlice
   );
-
+  console.log("📢 [EditProject.jsx:46]", selectedUsers);
   useEffect(() => {
     const fetchData = async () => {
       const response = await dispatch(singleProjectRequest(project_id));
@@ -60,7 +60,7 @@ export const EditProject = () => {
 
         // Wait for all user selections to be dispatched before accessing selectedUsers
         await Promise.all(
-          users?.map((user) => dispatch(toggleSelectUser(user.id)))
+          users?.map((user) => dispatch(toggleSelectUser(user)))
         );
 
         // Now you can safely access selectedUsers
@@ -85,10 +85,36 @@ export const EditProject = () => {
   const removeProject = () => {
     dispatch(removeProjectRequest(project_id)).then((result) => {
       if (result.payload.success) {
-        navigate(-1);
+        navigate("/", { replace: true });
       }
     });
   };
+
+  // const toggleFavorite = async (event, item) => {
+  //   event.stopPropagation();
+
+  //   const isProductInFavorites = single_data.users.some(
+  //     (user) => user.id === item.id
+  //   );
+
+  //   try {
+  //     if (isProductInFavorites) {
+  //       const fav = single_data.users.filter(
+  //         (favorite) => favorite.id !== item.id
+  //       );
+  //       setIsFavorite(fav);
+  //       localStorage.setItem("favorites", JSON.stringify(fav));
+  //     } else {
+  //       setIsFavorite([...isFavorite, item]);
+  //       localStorage.setItem(
+  //         "favorites",
+  //         JSON.stringify([...isFavorite, item])
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("Error toggling favorite:", error);
+  //   }
+  // };
 
   const handleSubmit = (event) => {
     event.stopPropagation();
@@ -175,9 +201,9 @@ export const EditProject = () => {
                 placeholder="Empty"
                 disabled={!isEditProject}
                 name="description"
-                value={formData.description}
+                value={formData.description || single_data?.description}
                 onChange={handleChange}
-                defaultValue={single_data?.description}
+                // defaultValue={single_data?.description}
               />
 
               {single_data?.project_logo || projectLogo || isEditProject ? (
@@ -246,35 +272,32 @@ export const EditProject = () => {
                   Edit users
                 </BorderButton>
               )}
-              {single_data?.users?.map(
-                (user, index) => (
-                  // selectedUsers.includes(user.id) && (
-                  <div className={styles.CreatedUsers} key={index}>
-                    <p className={styles.UserNameFirstLatterOrImage}>
-                      {user.avatar ? (
-                        <img
-                          src={user.avatar}
-                          alt={user.avatar}
-                          className={styles.Avatar}
-                        />
-                      ) : (
-                        <>
-                          {user?.name[0]} {user?.name?.split(" ")[1][0]}
-                        </>
-                      )}
+              {selectedUsers.map((user, index) => (
+                <div className={styles.CreatedUsers} key={index}>
+                  <p className={styles.UserNameFirstLatterOrImage}>
+                    {user.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.avatar}
+                        className={styles.Avatar}
+                      />
+                    ) : (
+                      <>
+                        {user?.name[0]}
+                        {/* {user?.name?.split(" ")[1][0]} */}
+                      </>
+                    )}
+                  </p>
+                  <div>
+                    <p className={styles.UserNameAndDeveloperType}>
+                      {user.name}
                     </p>
-                    <div>
-                      <p className={styles.UserNameAndDeveloperType}>
-                        {user.name}
-                      </p>
-                      <p className={styles.UserNameAndDeveloperType}>
-                        Front-end (50/15)
-                      </p>
-                    </div>
+                    <p className={styles.UserNameAndDeveloperType}>
+                      {user?.stack} (50/15)
+                    </p>
                   </div>
-                )
-                //   )
-              )}
+                </div>
+              ))}
             </div>
             <div className={styles.ButtonsParent}>
               <BorderButton
@@ -303,7 +326,11 @@ export const EditProject = () => {
           </form>
         </BigRenderer>
       </div>
-      <UserList isOpen={openUserList} close={closeModal} />
+      <UserList
+        isOpen={openUserList}
+        close={closeModal}
+        editingUsers={single_data?.users}
+      />
     </LocalizationProvider>
   );
 };

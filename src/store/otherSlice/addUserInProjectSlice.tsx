@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface User {
+  id: string;
+  // other properties
+}
+
 interface AddUserInProjectState {
-  selectedUsers: string[]; // Adjust the type based on the type of your user IDs
+  selectedUsers: User[];
 }
 
 const initialState: AddUserInProjectState = {
@@ -12,14 +17,33 @@ const addUserInProjectSlice = createSlice({
   name: "addUserInProjectSlice",
   initialState,
   reducers: {
-    toggleSelectUser: (state, action: PayloadAction<string>) => {
-      const userId = action.payload;
-      const selectedIndex = state.selectedUsers.indexOf(userId);
+    toggleSelectUser: (state, action: PayloadAction<User>) => {
+      const toggledUser = action.payload;
+      const isUserInFavorites = state.selectedUsers.some(
+        (user) => user.id === toggledUser.id
+      );
 
-      if (selectedIndex === -1) {
-        state.selectedUsers.push(userId);
-      } else {
-        state.selectedUsers.splice(selectedIndex, 1);
+      try {
+        if (isUserInFavorites) {
+          const filteredUsers = state.selectedUsers.filter(
+            (user) => user.id !== toggledUser.id
+          );
+
+          // Update state with filtered users
+          state.selectedUsers = filteredUsers;
+        } else {
+          // Check if the user is already in the selectedUsers array
+          const isUserAlreadySelected = state.selectedUsers.some(
+            (user) => user.id === toggledUser.id
+          );
+
+          if (!isUserAlreadySelected) {
+            // Update state with added user
+            state.selectedUsers.push(toggledUser);
+          }
+        }
+      } catch (error) {
+        console.error("Error toggling favorite:", error);
       }
     },
   },

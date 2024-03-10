@@ -9,7 +9,7 @@ interface AddTaskData {
   start_date: string;
   end_date: string;
   image: FileList;
-  user_ids: string[];
+  user_ids: any[];
 }
 
 interface AddTaskState {
@@ -36,8 +36,12 @@ export const addTaskRequest = createAsyncThunk(
       form_data.append("images[]", value)
     );
     Object.values(data.user_ids).map((value) =>
-      form_data.append("user_ids[]", value)
+      form_data.append("user_ids[]", value.id)
     );
+
+    // for (let i = 0; i < data.users.length; i++) {
+    //   form_data.append("users[]", data.users[i]?.id);
+    // }
 
     try {
       let response = await Http.post(

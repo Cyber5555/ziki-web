@@ -5,17 +5,18 @@ import CheckBoxList from "./CheckBoxList";
 import Description from "./Description";
 import DOMPurify from "dompurify";
 import Galleries from "./Galleries";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { BorderButton } from "../buttons/borderButton/BorderButton";
 import { BlueButton } from "../buttons/blueButton/BlueButton";
 import { Tooltip } from "@mui/material";
 import { updateTaskRequest } from "../../store/authUsersReducer/updateTaskSlice.tsx";
-import { useDispatch } from "react-redux";
+import { deleteTaskRequest } from "../../store/authUsersReducer/deleteTaskSlice.tsx";
+import { pusher } from "../../pusher.js";
 
 const TaskModal = ({ isOpen, close }) => {
   const dispatch = useDispatch();
   const { task_data } = useSelector((state) => state.getTaskSlice);
-  const [descriptionData, setDescriptionDate] = useState(null);
+  const [descriptionData, setDescriptionData] = useState(null);
   const [taskName, setTaskName] = useState("");
   const [gallery, setGallery] = useState("Galleries");
   const [isOpenSection, setIsOpenSection] = useState({
@@ -36,12 +37,46 @@ const TaskModal = ({ isOpen, close }) => {
   };
 
   useEffect(() => {
-    setDescriptionDate(task_data?.description);
+    const channel = pusher.subscribe("project-list");
+    channel.bind("task.updated", (data) => {
+      const { description, name, galleries } = data.task;
+
+      setDescriptionData(description);
+      setTaskName(name);
+      setIsOpenSection({
+        galleries: galleries?.length > 0,
+      });
+    });
+
+    setDescriptionData(task_data?.description);
     setTaskName(task_data?.name);
     setIsOpenSection({
-      galleries: task_data?.galleries?.length > 0 ? true : false,
+      galleries: task_data?.galleries?.length > 0,
     });
-  }, [task_data?.description, task_data?.galleries, task_data?.name]);
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, [task_data, dispatch]);
+
+  const handleRemoveTask = async () => {
+    const result = await dispatch(deleteTaskRequest(task_data?.id));
+    if (result.payload.success) {
+      dispatch()
+      close();
+    }
+  };
+
+  const handleSaveChanges = async () => {
+    dispatch(
+      updateTaskRequest({
+        status_id: task_data.status_id,
+        id: task_data.id,
+        description: descriptionData,
+        name: taskName,
+      })
+    );
+  };
 
   return (
     <div
@@ -74,27 +109,18 @@ const TaskModal = ({ isOpen, close }) => {
                 <div>
                   <Description
                     description={descriptionData}
-                    setDescription={setDescriptionDate}
+                    setDescription={setDescriptionData}
                   />
                   <div className={styles.DescriptionButtonsParent}>
                     <BlueButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        dispatch(
-                          updateTaskRequest({
-                            status_id: task_data.status_id,
-                            description: descriptionData,
-                          })
-                        );
-                        // handleSectionToggle("description");
-                      }}
+                      onClick={handleSaveChanges}
                       style={{ position: "static" }}>
                       Save
                     </BlueButton>
                     <BorderButton
                       onClick={() => {
                         handleSectionToggle("description");
-                        setDescriptionDate(task_data?.description);
+                        setDescriptionData(task_data?.description);
                       }}>
                       Cancel
                     </BorderButton>
@@ -156,6 +182,11 @@ const TaskModal = ({ isOpen, close }) => {
               {isOpenSection.galleries && (
                 <Galleries galleries={task_data?.galleries} />
               )}
+              <BorderButton
+                style={{ color: "red", borderColor: "red" }}
+                onClick={handleRemoveTask}>
+                Remove Task
+              </BorderButton>
             </div>
             <div className={styles.RightBar}>
               <label htmlFor="checklist" className={styles.CheckBoxListOpen}>
@@ -185,4 +216,5 @@ const TaskModal = ({ isOpen, close }) => {
     </div>
   );
 };
+
 export default TaskModal;

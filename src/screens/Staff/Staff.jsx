@@ -21,7 +21,7 @@ export const Staff = () => {
       {staff_data.length > 0 ? (
         staff_data.map((staff, index) => (
           <Link
-            to={`/staff/${staff.id}`}
+            to={`/staff/user/${staff.id}`}
             className={styles.ProjectsDevelopmentParent}
             key={index}>
             <div className={styles.CreatedUsers}>
@@ -66,7 +66,9 @@ export const Staff = () => {
           <p>your staff is empty</p>
         </div>
       )}
-      <BlueButton onClick={() => navigate("/add-staff")} role={role === "2"}>
+      <BlueButton
+        onClick={() => navigate("/staff/add-staff")}
+        role={role === "2"}>
         + invite or create user
       </BlueButton>
     </div>

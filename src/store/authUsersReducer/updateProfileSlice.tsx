@@ -1,19 +1,21 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Http } from "../../http";
 
-interface UpdateOrganizationDetailsState {
+interface UpdateProfileState {
   isLoading: boolean;
   // staff_data: any[];
 }
 
-interface UpdateOrganizationDetailsData {
-  logo: any;
+interface UpdateProfileData {
+  avatar: any;
   name: string;
+  stack: string;
+  email: string;
 }
 
-export const updateOrganizationDetailsRequest = createAsyncThunk(
-  "update/details/organizations",
-  async (data: UpdateOrganizationDetailsData, { rejectWithValue }) => {
+export const updateProfileRequest = createAsyncThunk(
+  "update/details/profile",
+  async (data: UpdateProfileData, { rejectWithValue }) => {
     const token = localStorage.getItem("userToken");
 
     let headers = {
@@ -23,17 +25,23 @@ export const updateOrganizationDetailsRequest = createAsyncThunk(
 
     const form_data = new FormData();
 
-    if (data.logo) {
-      alert(data.logo);
-      form_data.append("logo", data.logo);
+    if (data.avatar) {
+      alert(data.avatar);
+      form_data.append("avatar", data.avatar);
+    }
+    if (data.email) {
+      form_data.append("email", data.email);
     }
     if (data.name) {
       form_data.append("name", data.name);
     }
+    if (data.stack) {
+      form_data.append("stack", data.stack);
+    }
 
     try {
       let response = await Http.post(
-        `${process.env.REACT_APP_API_URL}api/update/organization`,
+        `${process.env.REACT_APP_API_URL}api/update-profile`,
         headers,
         form_data
       );
@@ -45,34 +53,34 @@ export const updateOrganizationDetailsRequest = createAsyncThunk(
   }
 );
 
-const updateOrganizationDetailsSlice = createSlice({
-  name: "update/details/organizations",
+const updateProfileSlice = createSlice({
+  name: "update/details/profile",
   initialState: {
     isLoading: false,
     // staff_data: [],
-  } as UpdateOrganizationDetailsState,
+  } as UpdateProfileState,
 
   reducers: {},
 
   extraReducers: (builder) => {
     builder
-      .addCase(updateOrganizationDetailsRequest.pending, (state) => {
+      .addCase(updateProfileRequest.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(
-        updateOrganizationDetailsRequest.fulfilled,
+        updateProfileRequest.fulfilled,
         (state, action: PayloadAction<any>) => {
           // if (action.payload?.success) {
-          //    state.staff_data = action.payload.payload;
+          //   state.staff_data = action.payload.payload;
           // }
 
           state.isLoading = false;
         }
       )
-      .addCase(updateOrganizationDetailsRequest.rejected, (state) => {
+      .addCase(updateProfileRequest.rejected, (state) => {
         state.isLoading = false;
       });
   },
 });
 
-export default updateOrganizationDetailsSlice.reducer;
+export default updateProfileSlice.reducer;

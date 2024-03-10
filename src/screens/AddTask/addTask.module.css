@@ -6,13 +6,19 @@
   position: relative;
 }
 
+.ScrollableBox {
+  overflow-y: scroll;
+  height: 100%;
+}
+
+
 .StartAndDeadlineParent {
   display: flex;
   gap: 16px;
 }
 
 .WorkingTimeParent {
-  width: 20%;
+  width: 130px;
   border-bottom: 1px solid #eaedf1;
   padding-bottom: 7px;
 }

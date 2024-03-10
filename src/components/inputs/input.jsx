@@ -34,7 +34,9 @@ const Input = ({
           {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
         </div>
       )}
-      <p className={styles.ErrorMessage}>{errorMessage}</p>
+      <p className={styles.ErrorMessage} style={{ marginBottom: error && 20 }}>
+        {errorMessage}
+      </p>
     </div>
   );
 };

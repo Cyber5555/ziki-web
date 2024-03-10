@@ -31,7 +31,6 @@ export const AddProject = () => {
   const { isLoading, errorMessages } = useSelector(
     (state) => state.addProjectSlice
   );
-  const { staff_data } = useSelector((state) => state.staffListSlice);
 
   const { selectedUsers } = useSelector((state) => state.addUserInProjectSlice);
 
@@ -74,145 +73,144 @@ export const AddProject = () => {
       <div className={styles.AddProjects}>
         <form onSubmit={handleSubmit}>
           <BigRenderer>
-            <div className={styles.StartAndDeadlineParent}>
-              <div className={styles.WorkingTimeParent}>
-                <DemoItem label="Start">
-                  <MobileDatePicker
-                    className={styles.StartAndDeadlineDate}
-                    format="YYYY-MM-DD"
-                    onChange={(e) => setStartDate(e)}
-                    value={startDate}
-                    minDate={moment(new Date())}
-                  />
-                </DemoItem>
-                <p className={styles.ErrorMessage}>
-                  {/* {errorMessages?.name ||
+            <div className={styles.ScrollableBox}>
+              <div className={styles.StartAndDeadlineParent}>
+                <div className={styles.WorkingTimeParent}>
+                  <DemoItem label="Start">
+                    <MobileDatePicker
+                      className={styles.StartAndDeadlineDate}
+                      format="YYYY-MM-DD"
+                      onChange={(e) => setStartDate(e)}
+                      value={startDate}
+                      minDate={moment(new Date())}
+                    />
+                  </DemoItem>
+                  <p className={styles.ErrorMessage}>
+                    {/* {errorMessages?.name ||
                     (errors.startDate && touched.startDate && errors.startDate)} */}
-                </p>
-              </div>
-              <div className={styles.WorkingTimeParent}>
-                <DemoItem label="Deadline">
-                  <MobileDatePicker
-                    className={styles.StartAndDeadlineDate}
-                    format="YYYY-MM-DD"
-                    onChange={(e) => setEndDate(e)}
-                    value={endDate}
-                    minDate={moment(new Date())}
-                  />
-                </DemoItem>
-                <p className={styles.ErrorMessage}>
-                  {/* {errorMessages?.name ||
+                  </p>
+                </div>
+                <div className={styles.WorkingTimeParent}>
+                  <DemoItem label="Deadline">
+                    <MobileDatePicker
+                      className={styles.StartAndDeadlineDate}
+                      format="YYYY-MM-DD"
+                      onChange={(e) => setEndDate(e)}
+                      value={endDate}
+                      minDate={moment(new Date())}
+                    />
+                  </DemoItem>
+                  <p className={styles.ErrorMessage}>
+                    {/* {errorMessages?.name ||
                     (errors.endDate && touched.endDate && errors.endDate)} */}
-                </p>
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className={styles.Line}></div>
-            <input
-              type="text"
-              name="projectName"
-              onChange={handleChange}
-              className={styles.ProjectTitle}
-              placeholder={"Projects name"}
-              value={formData.projectName}
-            />
-            {/* {errors.projectName &&
+              <div className={styles.Line}></div>
+              <input
+                type="text"
+                name="projectName"
+                onChange={handleChange}
+                className={styles.ProjectTitle}
+                placeholder={"Projects name"}
+                value={formData.projectName}
+              />
+              {/* {errors.projectName &&
                   touched.projectName &&
                   errors.projectName} */}
-            <p className={styles.ErrorMessage}>
-              {/* {errorMessages?.name ||
+              <p className={styles.ErrorMessage}>
+                {/* {errorMessages?.name ||
                 (errors.projectName &&
                   touched.projectName &&
                   errors.projectName)} */}
-            </p>
-            <textarea
-              className={styles.ProjectDescription}
-              placeholder={"Projects description"}
-              value={formData.description}
-              name="description"
-              onChange={handleChange}
-              // onBlur={handleBlur}
-            />
-            <div className={styles.ButtonsParent}>
-              <FileInput
-                onChange={(e) => {
-                  setProjectLogo(e.target.files[0]);
-                }}
-                onRemove={() => {
-                  setProjectLogo(null);
-                }}>
-                {projectLogo?.name ? projectLogo?.name : "+ Add project logo"}
-              </FileInput>
-              <FileInput
-                onChange={(e) => {
-                  setProjectTz(e.target.files[0]);
-                }}
-                onRemove={() => {
-                  setProjectTz(null);
-                }}>
-                {projectTz?.name ? projectTz?.name : "+ Add project tz"}
-              </FileInput>
-              {/* <BorderButton>+ Add project design</BorderButton>
+              </p>
+              <textarea
+                className={styles.ProjectDescription}
+                placeholder={"Projects description"}
+                value={formData.description}
+                name="description"
+                onChange={handleChange}
+                // onBlur={handleBlur}
+              />
+              <div className={styles.ButtonsParent}>
+                <FileInput
+                  onChange={(e) => {
+                    setProjectLogo(e.target.files[0]);
+                  }}
+                  onRemove={() => {
+                    setProjectLogo(null);
+                  }}>
+                  {projectLogo?.name ? projectLogo?.name : "+ Add project logo"}
+                </FileInput>
+                <FileInput
+                  onChange={(e) => {
+                    setProjectTz(e.target.files[0]);
+                  }}
+                  onRemove={() => {
+                    setProjectTz(null);
+                  }}>
+                  {projectTz?.name ? projectTz?.name : "+ Add project tz"}
+                </FileInput>
+                {/* <BorderButton>+ Add project design</BorderButton>
               <BorderButton>+ Add project logoStatus project</BorderButton> */}
-            </div>
-            <BlueButton
-              style={{ position: "static", marginTop: 12 }}
-              onClick={openModal}>
-              + Add user
-            </BlueButton>
-            <br />
-            <br />
-            <p className={styles.ErrorMessage}>
-              {errorMessages?.project_logo}
+              </div>
+              <BlueButton
+                style={{ position: "static", marginTop: 12 }}
+                onClick={openModal}>
+                + Add user
+              </BlueButton>
               <br />
-              {errorMessages?.project_tz}
-            </p>
-            <BlueButton
-              style={{ position: "absolute", right: 20, bottom: 20 }}
-              onClick={(e) => e.stopPropagation()}
-              type={"submit"}
-              disabled={isLoading}>
-              {isLoading ? (
-                <ClipLoader loading={isLoading} size={15} color="white" />
-              ) : (
-                "Save"
-              )}
-            </BlueButton>
-            <div className={styles.UsersParent}>
-              <h2 className={styles.UsersTitle}>Users</h2>
-            </div>
-
-            {staff_data.length > 0 ? (
-              staff_data?.map(
-                (user, index) =>
-                  selectedUsers.includes(user.id) && (
-                    <div className={styles.CreatedUsers} key={index}>
-                      <p className={styles.UserNameFirstLatterOrImage}>
-                        {user.avatar ? (
-                          <img
-                            src={user.avatar}
-                            alt={user.avatar}
-                            className={styles.Avatar}
-                          />
-                        ) : (
-                          <>
-                            {user?.name[0]} {user?.name?.split(" ")[1][0]}
-                          </>
-                        )}
+              <br />
+              <p className={styles.ErrorMessage}>
+                {errorMessages?.project_logo}
+                <br />
+                {errorMessages?.project_tz}
+              </p>
+              <BlueButton
+                style={{ position: "absolute", right: 20, bottom: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                type={"submit"}
+                disabled={isLoading}>
+                {isLoading ? (
+                  <ClipLoader loading={isLoading} size={15} color="white" />
+                ) : (
+                  "Save"
+                )}
+              </BlueButton>
+              <div className={styles.UsersParent}>
+                <h2 className={styles.UsersTitle}>Users</h2>
+              </div>
+              {selectedUsers.length > 0 ? (
+                selectedUsers?.map((user, index) => (
+                  <div className={styles.CreatedUsers} key={index}>
+                    <p className={styles.UserNameFirstLatterOrImage}>
+                      {user.avatar ? (
+                        <img
+                          src={user.avatar}
+                          alt={user.avatar}
+                          className={styles.Avatar}
+                        />
+                      ) : (
+                        <>
+                          {user?.name[0]}
+                          {/* {user?.name?.split(" ")[1][0]} */}
+                        </>
+                      )}
+                    </p>
+                    <div>
+                      <p className={styles.UserNameAndDeveloperType}>
+                        {user.name}
                       </p>
-                      <div>
-                        <p className={styles.UserNameAndDeveloperType}>
-                          {user.name}
-                        </p>
-                        <p className={styles.UserNameAndDeveloperType}>
-                          Front-end (50/15)
-                        </p>
-                      </div>
+                      <p className={styles.UserNameAndDeveloperType}>
+                        {user.stack} (50/15)
+                      </p>
                     </div>
-                  )
-              )
-            ) : (
-              <p>No selected user</p>
-            )}
+                  </div>
+                ))
+              ) : (
+                <p>No selected user</p>
+              )}
+            </div>
           </BigRenderer>
         </form>
       </div>
