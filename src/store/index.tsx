@@ -1,4 +1,9 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import {
+  combineReducers,
+  configureStore,
+  getDefaultMiddleware,
+} from "@reduxjs/toolkit";
+import thunk from "redux-thunk";
 import getAllProjectsSlice from "./authUsersReducer/getAllProjectsSlice.tsx";
 import addProjectSlice from "./authUsersReducer/addProjectSlice.tsx";
 import addUserInProjectSlice from "./otherSlice/addUserInProjectSlice.tsx";
@@ -48,15 +53,12 @@ const rootReducer = combineReducers({
   updatePasswordSlice,
   deleteTaskSlice,
   adminCreateNewUserSlice,
-  updateTaskSlice
+  updateTaskSlice,
 });
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+  middleware: [thunk, ...getDefaultMiddleware({ serializableCheck: false })],
 });
 
 // Define RootState type

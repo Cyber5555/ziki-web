@@ -44,8 +44,6 @@ export const editProjectRequest = createAsyncThunk(
     form_data.append("end_date", data.endDate);
 
     for (let i = 0; i < data.users.length; i++) {
-
-
       form_data.append("users[]", data.users[i]?.id);
     }
 

@@ -62,7 +62,7 @@ const TaskModal = ({ isOpen, close }) => {
   const handleRemoveTask = async () => {
     const result = await dispatch(deleteTaskRequest(task_data?.id));
     if (result.payload.success) {
-      dispatch()
+      // dispatch();
       close();
     }
   };
